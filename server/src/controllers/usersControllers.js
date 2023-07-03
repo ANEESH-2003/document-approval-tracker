@@ -113,11 +113,11 @@ module.exports = {
               }, process.env.JWT_KEY, {expiresIn: '1h'});
               res.json({ message: 'User signed in successfully. ', data: { token } });
             } else {
-              res.json({ invalidCredentials: 'Invalid email or Password. '});
+              res.json({ invalidCredentials: 'Incorrect Password. '});
             }
           });
         } else {
-          res.json({ invalidCredentials: 'Invalid email or Password. ' });
+          res.json({ invalidCredentials: 'Incorrect email. ' });
         }
       }).catch((err) => {
         console.log(`[server]: Unable to register \n[server]: ${err}`);
