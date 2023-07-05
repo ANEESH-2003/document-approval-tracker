@@ -85,15 +85,16 @@ module.exports = {
           if (data.current.toString() === req.userId) {
             let update = {
               $push: {
-                past: new mongoose.Types.ObjectId(req.userId)
+                past: req.userId
               },
-              current: nextId
+              current: nextId,
             }
 
             if (url !== '') {
               update = {
                 ...update,
                 $push: {
+                  ...update.$push,
                   url: {
                     url,
                     timestamp: Date.now()
