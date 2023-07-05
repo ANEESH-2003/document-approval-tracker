@@ -1,22 +1,23 @@
 'use client'
-import { useState} from "react"
-import { useRouter } from "next/navigation";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
 import Link from "next/link";
 
 export default function Home() {
-  const [wronginfo,setwronginfo]=useState(false);
+  const [wronginfo, setwronginfo] = useState(false);
   const router = useRouter();
-  const authenticatefunction=()=>{
+  const authenticatefunction = () => {
     /* if server says incorrect info */
-    setwronginfo(value=>!value);
+    setwronginfo(value => !value);
     /* else if correct */
     router.push('/../dashboard');
   }
   return (
-    <div className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8" style={{backgroundImage:'url(/bgforlogin.jpg)',backgroundSize:'cover'}}>
+    <div className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8"
+         style={{backgroundImage: 'url(/bgforlogin.jpg)', backgroundSize: 'cover'}}>
       <div className="bg-blue-400 p-6 sm:mx-auto sm:w-full sm:max-w-sm rounded-xl">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          {wronginfo?<h5 className="text-red-600 font-bold text-center">Email/Password are incorrect</h5>:null}
+          {wronginfo ? <h5 className="text-red-600 font-bold text-center">Email/Password are incorrect</h5> : null}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             SIGN IN
           </h2>
@@ -66,11 +67,13 @@ export default function Home() {
               >
                 Sign in
               </button>
-              <h5 className="text-center pt-2">Do not have an account?<Link href="/../usersignup" className="text-red-600 font-bold"> Sign up</Link></h5>
+              <h5 className="text-center pt-2">Do not have an account?<Link href="/../usersignup"
+                                                                            className="text-red-600 font-bold"> Sign
+                up</Link></h5>
             </div>
           </form>
         </div>
-        </div>
       </div>
+    </div>
   )
 }
