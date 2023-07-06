@@ -110,19 +110,45 @@ module.exports = {
               const token = jwt.sign({
                 userId: userInfo._id,
                 name: userInfo.name,
+                position: userInfo.position,
               }, process.env.JWT_KEY, {expiresIn: '1h'});
               res.json({ message: 'User signed in successfully. ', data: { token } });
             } else {
-              res.json({ invalidCredentials: 'Invalid email or Password. '});
+              res.json({ invalidCredentials: 'Incorrect Password. '});
             }
           });
         } else {
-          res.json({ invalidCredentials: 'Invalid email or Password. ' });
+          res.json({ invalidCredentials: 'Incorrect email. ' });
         }
       }).catch((err) => {
         console.log(`[server]: Unable to register \n[server]: ${err}`);
         res.json({ message: 'something went wrong. ', errors: err });
       });
+    }
+  },
+
+  isAuthenticated: async (req, res, next) => {
+    if (!req.headers['authorization']) {
+      res.status(403).json({error: "No token provided. "});
+    } else {
+      const authorizationHeader = req.headers['authorization'];
+      const authorizationToken = authorizationHeader.split(' ')[1];
+
+      if (authorizationToken) {
+        jwt.verify(authorizationToken, process.env.JWT_KEY, (err, decoded) => {
+          if (err) {
+            console.log(`[server]: Unable to verify the user \n[server]: ${err}`);
+            res.status(401).json({ message: 'Error', errors: "Failed to authenticate. "});
+          } else {
+            req.name = decoded.name;
+            req.position = decoded.position;
+            req.userId = decoded.userId;
+            next();
+          }
+        });
+      } else {
+        res.status(403).json({ message: 'Error', errors: "No token provided. "});
+      }
     }
   },
 };
