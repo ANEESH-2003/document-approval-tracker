@@ -3,7 +3,16 @@
 import DocumentComponent from './DocumentComponent'
 import { useRouter } from 'next/navigation'
 import TopBar from '../TopBar/page'
+import { Tab } from '@headlessui/react'
+import { Fragment } from 'react'
 
+const navigation = [
+  { name: 'Dashboard', href: '/../dashboard' },
+  { name: 'Team', href: '#', current: false },
+  { name: 'Projects', href: '#', current: true }  ,
+  { name: 'Calendar', href: '#', current: false },
+  { name: 'Reports', href: '#', current: false },
+]
 
 const userDocs=[
   {id: 1 ,title: 'fail all the students', status: 'under-consideration', assignedBy: 'sandeep saini',currentlyassigned: 'sdhfbsdbijsdji'},
@@ -13,26 +22,73 @@ const userDocs=[
 
 export default function Dashboard() {
   const router=useRouter();
+  const acceptedDocs=userDocs.filter((item)=>(item.status=='accepted'));
+  const rejectedDocs=userDocs.filter((item)=>(item.status=='rejected'));
+  const UCDocs=userDocs.filter((item)=>(item.status=='under-consideration'));
   const docOnClick=()=>{
     router.push('/../document');
   }
   return (
     <>
       <div className="min-h-full">
-        <TopBar page="Dashboard"/>
+        <TopBar page="Dashboard" navigation={navigation}/>
         <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">User Dashboard</h1>
           </div>
         </header>
-        <main>
-          <ul className="flex-row mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 justify-items-center">
-            {userDocs.map((item)=>(
+        <main className='w-[100%]'>
+          <Tab.Group>
+            <Tab.List className="flex justify-around w-full pt-3 justify-items-center">
+              <Tab as={Fragment}>{({ selected }) => (<button
+              className={
+                selected ? 'bg-lime-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-lime-500 font-bold'
+              }
+            >
+              Accepted
+            </button>
+          )}</Tab>
+              <Tab as={Fragment}>{({ selected }) => (<button
+              className={
+                selected ? 'bg-red-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-red-500 font-bold'
+              }
+            >
+              Rejected
+            </button>
+          )}</Tab>
+              <Tab as={Fragment}>{({ selected }) => (<button
+              className={
+                selected ? 'bg-yellow-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-yellow-500 font-bold'
+              }
+            >
+              Under-Consideration
+            </button>
+          )}</Tab>
+            </Tab.List>
+            <Tab.Panels>
+              <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
+            {acceptedDocs.map((item)=>(
               <li key={item.id}>
                 <DocumentComponent doc={item} onClick={docOnClick}/>
               </li>
             ))}
-          </ul>
+          </ul></Tab.Panel>
+              <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
+            {rejectedDocs.map((item)=>(
+              <li key={item.id}>
+                <DocumentComponent doc={item} onClick={docOnClick}/>
+              </li>
+            ))}
+          </ul></Tab.Panel>
+              <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
+            {UCDocs.map((item)=>(
+              <li key={item.id}>
+                <DocumentComponent doc={item} onClick={docOnClick}/>
+              </li>
+            ))}
+          </ul></Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
         </main>
       </div>
     </>

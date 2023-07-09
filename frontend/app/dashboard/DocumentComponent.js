@@ -1,7 +1,7 @@
 
 export default function DocumentComponent(props) {
   return (
-    <div className="flex justify-between px-2 py-5 m-1 max-w-[95%] text-lg bg-slate-200 rounded-md overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 " onClick={props.onClick}>
+    <div className="flex justify-between px-2 py-5 m-1 w-[95%] sm:w-[90%] mx-auto text-lg bg-slate-200 rounded-md overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 " onClick={props.onClick}>
     <div className="flex gap-x-4">
         <div className="min-w-0 flex-auto capitalize">
           <p className="text-sm font-semibold leading-6 text-gray-900">{props.doc.title}</p>
