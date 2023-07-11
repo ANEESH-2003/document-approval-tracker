@@ -1,5 +1,6 @@
 const cloudinary = require("cloudinary").v2;
 const documentModel = require("../model/documentModel");
+const usersModel = require("../model/usersModel");
 const fs = require("fs");
 const mongoose = require("mongoose");
 
@@ -40,7 +41,7 @@ module.exports = {
         const newDoc = new documentModel({
           current,
           department,
-          url: [{ doc: result.secure_url, timestamp: Date.now() }],
+          url: [{doc: result.secure_url, timestamp: Date.now(), _id: req.userId}],
           title,
           description: desc,
           owner: req.userId
@@ -65,57 +66,70 @@ module.exports = {
   approve: async (req, res) => {
     const nextId = req.body.next || '';
     const id = req.body.id || '';
+    const status = req.body.accepted || 'In progress';
 
     try {
-      if (nextId === '') {
+      if (nextId === '' && status === 'In progress') {
         res.json({message: 'Error', data: {next: 'This field cannot be empty'}});
       } else if (id === '') {
         res.json({message: 'Error', data: {id: 'This field cannot be empty'}});
-      } else if (req.position !== 'DHoD' && req.position !== 'HoD') {
+      } else if (req.position !== 'DHoD' && req.position !== 'HoD' && req.position !== 'Clark') {
         res.json({message: 'Error', errors: 'You are not allowed to approve the request'});
       } else {
         let url = '';
+
+        console.log(`[server]: ${req.file}`);
 
         if (req.file) {
           const result = await cloudinary.uploader.upload(req.file.path);
           url = result.secure_url;
         }
 
-        documentModel.findOne({_id: id}).then((data) => {
-          if (data.current.toString() === req.userId) {
-            let update = {
-              $push: {
-                past: req.userId
-              },
-              current: nextId,
-            }
+        const nextUser = await usersModel.findOne({_id: nextId});
 
-            if (url !== '') {
-              update = {
-                ...update,
+        if (nextUser.position === 'DHoD' || nextUser.position === 'HoD' || nextUser.position === 'Clark') {
+          documentModel.findOne({_id: id}).then((data) => {
+            if (data.status === 'Rejected' || data.status === 'Accepted') {
+              res.json({message: 'Error', errors: `This request has already been ${data.status}`});
+            } else if (data.current.toString() === req.userId) {
+              let update = {
                 $push: {
-                  ...update.$push,
-                  url: {
-                    url,
-                    timestamp: Date.now()
-                  }
-                }
-              };
-            }
+                  past: req.userId
+                },
+                status,
+                current: nextId,
+              }
 
-            documentModel.updateOne({_id: id}, update).then((result) => {
-              res.json({message: 'Success', data: result});
-            }).catch((err) => {
-              console.log(`[server]: Error uploading the document \n[server]: ${err}`);
-              res.json({message: "Error uploading the document ", errors: err});
-            });
-          } else {
-            res.json({message: 'Error', errors: 'You are not allowed to approve the request 1'});
-          }
-        }).catch((err) => {
-          console.log(`[server]: Error uploading the document \n[server]: ${err}`);
-          res.json({message: "Error uploading the document ", errors: err});
-        });
+              if (url !== '') {
+                update = {
+                  ...update,
+                  $push: {
+                    ...update.$push,
+                    url: {
+                      doc: url,
+                      timestamp: Date.now(),
+                      _id: req.userId,
+                    }
+                  }
+                };
+              }
+
+              documentModel.updateOne({_id: id}, update).then((result) => {
+                res.json({message: 'Success', data: update});
+              }).catch((err) => {
+                console.log(`[server]: Error uploading the document \n[server]: ${err}`);
+                res.json({message: "Error uploading the document ", errors: err});
+              });
+            } else {
+              res.json({message: 'Error', errors: 'You are not allowed to approve the request 1'});
+            }
+          }).catch((err) => {
+            console.log(`[server]: Error uploading the document \n[server]: ${err}`);
+            res.json({message: "Error uploading the document ", errors: err});
+          });
+        } else {
+          res.json({message: 'Error', errors: 'Cannot pass the request to this user'});
+        }
       }
     } catch (e) {
       console.log(`[server]: Error uploading the document \n[server]: ${e}`);
@@ -128,6 +142,33 @@ module.exports = {
           console.log(`[server]: Unable to delete the temporary files`);
         }
       });
+    }
+  },
+
+  myDocs: async (req, res) => {
+    if (req.position === 'None') {
+      documentModel.find({owner: req.userId}).then((data) => {
+        res.json({message: "success", data});
+      }).catch((err) => {
+        console.log(`[server]: Unable to fetch the documents. \n[server]: ${err}`);
+        res.json({message: 'Error', errors: "Unable to fetch the documents."});
+      });
+    } else {
+      documentModel.find({
+        $or: [
+          {
+            current: req.userId,
+          },
+          {
+            past: {
+              $in: [req.userId],
+            }
+          }
+        ]
+      }).then((data) => res.json({message: 'success', data})).catch((err) => {
+        console.log(`[server]: Unable to fetch the documents. \n[server]: ${err}`);
+        res.json({message: 'Error', errors: "Unable to fetch the documents."});
+      })
     }
   }
 };

@@ -35,6 +35,32 @@ const checkForErrors = async function (reqBody) {
   return errors;
 }
 
+const signIn = (reqBody, res) => {
+  const newUser = new usersModel(reqBody);
+
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      res.json({message: 'something went wrong. ', errors: err});
+      console.log(`[server]: Unable to register \n[server]: ${err}`);
+      return err;
+    } else {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) {
+          return err;
+        } else {
+          newUser.password = hash;
+          newUser.save().then(() => {
+            res.json({message: 'success. '});
+          }).catch((err) => {
+            console.log(`[server]: Unable to register \n[server]: ${err}`);
+            res.json({message: 'something went wrong. ', errors: err});
+          });
+        }
+      });
+    }
+  });
+};
+
 module.exports = {
   register: async (req, res) => {
     const name = req.body.name || '';
@@ -42,44 +68,15 @@ module.exports = {
     const email = req.body.email || '';
     const password = req.body.password || '';
     const confirmPassword = req.body.confirmPassword || '';
-    const position = req.body.position || 'None';
-    const department = req.body.department || 'None';
+    const position = 'None';
+    const department = 'None';
     const reqBody = {name, phone, email, password, confirmPassword, position, department};
 
     let errors = await checkForErrors(reqBody);
     if (Object.keys(errors).length > 0) {
       res.json({message: 'Incorrect inputs. ', errors});
     } else {
-      const newUser = new usersModel({
-        name,
-        phone,
-        email,
-        password,
-        position,
-        department
-      });
-
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) {
-          res.json({ message: 'something went wrong. ', errors: err });
-          console.log(`[server]: Unable to register \n[server]: ${err}`);
-          return err;
-        } else {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) {
-              return err;
-            } else {
-              newUser.password = hash;
-              newUser.save().then(() => {
-                res.json({message: 'success. '});
-              }).catch((err) => {
-                console.log(`[server]: Unable to register \n[server]: ${err}`);
-                res.json({ message: 'something went wrong. ', errors: err });
-              });
-            }
-          });
-        }
-      });
+      signIn(reqBody, res);
     }
   },
 
@@ -97,9 +94,9 @@ module.exports = {
     }
 
     if (Object.keys(errors).length > 0) {
-      res.json({ errors });
+      res.json({errors});
     } else {
-      usersModel.findOne({ email }).then((userInfo) => {
+      usersModel.findOne({email}).then((userInfo) => {
         if (userInfo) {
           bcrypt.compare(password, userInfo.password, (err, isMatch) => {
             if (err) {
@@ -111,18 +108,19 @@ module.exports = {
                 userId: userInfo._id,
                 name: userInfo.name,
                 position: userInfo.position,
+                department: userInfo.department,
               }, process.env.JWT_KEY, {expiresIn: '1h'});
-              res.json({ message: 'User signed in successfully. ', data: { token } });
+              res.json({message: 'User signed in successfully. ', data: {token}});
             } else {
-              res.json({ invalidCredentials: 'Incorrect Password. '});
+              res.json({invalidCredentials: 'Incorrect Password. '});
             }
           });
         } else {
-          res.json({ invalidCredentials: 'Incorrect email. ' });
+          res.json({invalidCredentials: 'Incorrect email. '});
         }
       }).catch((err) => {
         console.log(`[server]: Unable to register \n[server]: ${err}`);
-        res.json({ message: 'something went wrong. ', errors: err });
+        res.json({message: 'something went wrong. ', errors: err});
       });
     }
   },
@@ -138,17 +136,40 @@ module.exports = {
         jwt.verify(authorizationToken, process.env.JWT_KEY, (err, decoded) => {
           if (err) {
             console.log(`[server]: Unable to verify the user \n[server]: ${err}`);
-            res.status(401).json({ message: 'Error', errors: "Failed to authenticate. "});
+            res.status(401).json({message: 'Error', errors: "Failed to authenticate. "});
           } else {
             req.name = decoded.name;
             req.position = decoded.position;
             req.userId = decoded.userId;
+            req.department = decoded.department;
             next();
           }
         });
       } else {
-        res.status(403).json({ message: 'Error', errors: "No token provided. "});
+        res.status(403).json({message: 'Error', errors: "No token provided. "});
       }
     }
   },
+
+  checkForErrors,
+
+  signIn,
+
+  getAllUsers: async (req, res) => {
+    usersModel.find({}).then((data) => {
+      const result = data.filter((item) => {
+        return item.position === 'DHoD' || item.position === 'HoD' || item.position === 'Clark';
+      }).map((item) => ({
+        _id: item._id,
+        name: item.name,
+        position: item.position,
+        department: item.department,
+      }));
+
+      res.json({ message: 'success', data: result });
+    }).catch(err => {
+      console.log(`[server]: Unable to fetch the users. \n[server]: ${err}`);
+      res.json({message: 'Error', errors: "Unable to fetch the users."});
+    });
+  }
 };
