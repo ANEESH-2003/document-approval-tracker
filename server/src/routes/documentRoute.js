@@ -23,6 +23,6 @@ router.post('/upload', usersControllers.isAuthenticated, upload.single("document
 
 router.post('/approve', usersControllers.isAuthenticated, upload.single("document"), docsControllers.approve);
 
-
+router.get('/', usersControllers.isAuthenticated, docsControllers.myDocs);
 
 module.exports = router;

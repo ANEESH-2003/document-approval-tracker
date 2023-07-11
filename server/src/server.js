@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const usersRoute = require("./routes/usersRoute");
 const documentRoute = require("./routes/documentRoute");
+const adminRoute = require("./routes/adminRoute");
 
 const server = express();
 const PORT = process.env.PORT || 8000;
@@ -21,6 +22,7 @@ server.use(express.json());
 
 server.use('/api/users/', usersRoute);
 server.use('/api/document/', documentRoute);
+server.use('/api/admin/', adminRoute);
 
 server.listen(PORT, () => {
   console.log(`[server]: 🚀 Server running at port: ${PORT}`);
