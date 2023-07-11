@@ -1,15 +1,16 @@
 'use client'
+
 import Link from 'next/link'
-import DocumentComponent from './DocumentComponent'
+import DocumentComponent from '../dashboard/DocumentComponent'
 import TopBar from '../TopBar/page'
 import { Tab } from '@headlessui/react'
 import { Fragment } from 'react'
 
 const navigation = [
-  { name: 'Dashboard', href: '/../dashboard' },
+  { name: 'Dashboard', href: '/../UserDashboard' },
   { name: 'Team', href: '#', current: false },
   { name: 'Projects', href: '#', current: true }  ,
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Issue Application', href: '../IssueApplication', current: false },
   { name: 'Reports', href: '#', current: false },
 ]
 
@@ -23,9 +24,6 @@ export default function Dashboard() {
   const acceptedDocs=userDocs.filter((item)=>(item.status=='accepted'));
   const rejectedDocs=userDocs.filter((item)=>(item.status=='rejected'));
   const UCDocs=userDocs.filter((item)=>(item.status=='under-consideration'));
-  const docOnClick=()=>{
-    router.push('/../document');
-  }
   return (
     <>
       <div className="min-h-full">
@@ -36,7 +34,7 @@ export default function Dashboard() {
           </div>
         </header>
         <main className='w-[100%]'>
-        <Tab.Group>
+          <Tab.Group>
             <Tab.List className="flex justify-around w-full pt-3 justify-items-center">
               <Tab as={Fragment}>{({ selected }) => (<button
               className={
@@ -66,7 +64,7 @@ export default function Dashboard() {
             <Tab.Panels>
               <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
             {acceptedDocs.map((item)=>(
-              <Link href="../document">
+              <Link href="/UserDocument">
                 <li key={item.id}>
                 <DocumentComponent doc={item}/>
                 </li>
@@ -75,7 +73,7 @@ export default function Dashboard() {
           </ul></Tab.Panel>
               <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
             {rejectedDocs.map((item)=>(
-              <Link href="../document">
+              <Link href="/UserDocument">
               <li key={item.id}>
               <DocumentComponent doc={item}/>
               </li>
@@ -84,7 +82,7 @@ export default function Dashboard() {
           </ul></Tab.Panel>
               <Tab.Panel><ul className="flex-row mx-auto w-[100%] py-6 content-center">
             {UCDocs.map((item)=>(
-              <Link href="../document">
+              <Link href="/UserDocument">
               <li key={item.id}>
               <DocumentComponent doc={item}/>
               </li>

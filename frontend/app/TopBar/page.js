@@ -9,13 +9,7 @@ const user = {
     email: 'tom@example.com',
   
   }
-  const navigation = [
-    { name: 'Dashboard', href: '/../dashboard' },
-    { name: 'Team', href: '#', current: false },
-    { name: 'Projects', href: '#', current: true }  ,
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Reports', href: '#', current: false },
-  ]
+  
   const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
@@ -25,6 +19,7 @@ const user = {
     return classes.filter(Boolean).join(' ')
   }
 export default function TopBar(props) {
+  const navigation=props.navigation;
   return (
     <>
         <Disclosure as="nav" className="bg-gray-800">
