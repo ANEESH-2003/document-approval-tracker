@@ -110,17 +110,17 @@ module.exports = {
                 position: userInfo.position,
                 department: userInfo.department,
               }, process.env.JWT_KEY, {expiresIn: '1h'});
-              res.json({message: 'User signed in successfully. ', data: {token}});
+              res.json({message: 'success', data: token});
             } else {
-              res.json({invalidCredentials: 'Incorrect Password. '});
+              res.json({message: 'error', errors: 'Incorrect Password. '});
             }
           });
         } else {
-          res.json({invalidCredentials: 'Incorrect email. '});
+          res.json({message: 'error', errors: 'Invalid Email'});
         }
       }).catch((err) => {
         console.log(`[server]: Unable to register \n[server]: ${err}`);
-        res.json({message: 'something went wrong. ', errors: err});
+        res.json({message: 'error', errors: err});
       });
     }
   },
