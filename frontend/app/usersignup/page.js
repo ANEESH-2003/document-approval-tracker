@@ -1,24 +1,25 @@
-'use client'
-import { useState} from "react"
-import { useRouter } from "next/navigation";
+'use client';
+import {useState} from "react";
+import {useRouter} from "next/navigation";
 import Link from "next/link";
 
 export default function Home() {
-  const [wronginfo,setwronginfo]=useState(false);
+  const [wronginfo, setwronginfo] = useState(false);
   const router = useRouter();
-  const authenticatefunction=()=>{
+  const authenticatefunction = () => {
     /* if server says the info is already acquired*/
-    setwronginfo(value=>!value);
+    setwronginfo(value => !value);
     /* else if not acquired*/
     router.push('/../');
   }
   return (
-    <div className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8" style={{backgroundImage:'url(/bgforsignup.jpg)',backgroundSize:'cover'}}>
+    <div className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8"
+         style={{backgroundImage: 'url(/bgforsignup.jpg)', backgroundSize: 'cover'}}>
       <div className="bg-blue-400 p-6 sm:mx-auto sm:w-full sm:max-w-sm rounded-xl">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          {wronginfo?<h5 className="text-red-600 font-bold text-center">credentials are already in use</h5>:null}
+          {wronginfo ? <h5 className="text-red-600 font-bold text-center">credentials are already in use</h5> : null}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            SIGN UP 
+            SIGN UP
           </h2>
         </div>
 
@@ -84,11 +85,13 @@ export default function Home() {
               >
                 Sign up
               </button>
-              <h5 className="text-center pt-2">Already have an account?<Link href="/.." className="text-red-600 font-bold"> Sign in</Link></h5>
+              <h5 className="text-center pt-2">Already have an account?<Link href="/.."
+                                                                             className="text-red-600 font-bold"> Sign
+                in</Link></h5>
             </div>
           </form>
         </div>
-        </div>
       </div>
+    </div>
   )
 }

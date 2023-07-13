@@ -24,7 +24,7 @@ const usersSchema = new Schema({
   },
   position: {
     type: String,
-    enum: ["None", "Admin", "DHoD", "HoD"],
+    enum: ["None", "Admin", "Clark", "DHoD", "HoD"],
     required: true,
     trim: true
   },
