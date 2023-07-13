@@ -23,9 +23,6 @@ export default function Dashboard() {
   const acceptedDocs=userDocs.filter((item)=>(item.status=='accepted'));
   const rejectedDocs=userDocs.filter((item)=>(item.status=='rejected'));
   const UCDocs=userDocs.filter((item)=>(item.status=='under-consideration'));
-  const docOnClick=()=>{
-    router.push('/../document');
-  }
   return (
     <>
       <div className="min-h-full">

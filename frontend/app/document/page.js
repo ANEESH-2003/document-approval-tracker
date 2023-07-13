@@ -5,6 +5,7 @@ import { useState,Fragment } from 'react'
 import { Listbox, Transition} from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import SvgComponent from './svgComponent'
+import axios from 'axios'
 
 const navigation = [
   { name: 'Dashboard', href: '/../dashboard' },
@@ -106,8 +107,21 @@ export default function page() {
     setActive(!Active);
     setcurrentStatus('rejected');
   }
-  const uploadbuttonclick=()=>{
-    /* take to the upload page */
+  const [state,setState]=useState({selectedFile:null});
+  const [active,setactive]=useState(false);
+  const onFileChange=(event)=>{
+    setState({selectedFile:event.target.files[0]});
+    setactive(!active);
+  }
+  const onFileUpload=()=>{
+    const formData = new FormData();
+    formData.append(
+      "myFile",
+      state.selectedFile,
+      state.selectedFile.name
+    );
+    console.log(state.selectedFile);
+    axios.post("api/uploadfile", formData);
   }
   return (
     <div className="min-h-full capitalize">
@@ -143,24 +157,18 @@ export default function page() {
               </ul>
             </div>
             <h3 className='text-sm font-semibold leading-6 text-gray-900 pt-3'>{docInfo.description}</h3>
-            {docInfo.signedBy.length==0
+            <div className='flex flex-wrap justify-between'>
+              <div className='sm:w-[40%] w-[100%]'>
+              {docInfo.signedBy.length==0
             ?null:
-            <div className='flex-row'>
-              <h2 className='text-sm font-normal leading-6 text-gray-900 pt-3'>Till now this document has been signed by:</h2>
-              <ul className='flex-row max-w-sm pt-3 items-start'>
+            <div className='flex-row w-[100%]'>
+              <h2 className='text-sm font-normal leading-6 text-gray-900 pt-3 w-[100%]'>Till now this document has been signed by:</h2>
+              <ul className='flex-row pt-3 items-start w-[100%]'>
                 {docInfo.signedBy.map((item)=><UserCard user={item} active={item.versionurl==''?false:true}/>)}
               </ul>
             </div>}
-            <button 
-            type='submit' 
-            onClick={uploadbuttonclick}
-            className='bg-blue-400 mt-3 w-[100%] sm:w-96 rounded-lg'
-            disabled={!Active}
-            >
-            <h2 className='text-lg font-bold p-2 text-white'>Upload Files</h2>
-          </button>
-            <p className='text-sm font-normal leading-6 text-gray-900 pt-3'>Whom should you further assign this complaint to:</p>
-            <Listbox value={selected} onChange={setSelected} className='max-w-sm'>
+            <p className='text-sm font-normal leading-6 text-gray-900 pt-3 w-[100%]'>Whom should you further assign this complaint to:</p>
+            <Listbox value={selected} onChange={setSelected} className='w-[100%]'>
         <div className="relative mt-1 pt-3">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="block truncate">{selected.name} {selected.designation==''?null:<>({selected.designation})</>}</span>
@@ -210,11 +218,34 @@ export default function page() {
           </Transition>
         </div>
       </Listbox>
-            <div className='flex justify-between max-w-sm pt-2'>
+              </div>
+              <div className='sm:w-[40%] w-[100%] flex-col self-center items-center bg-white p-4 mt-5 h-[50%] border-dotted border-4 border-blue-600 rounded-xl '>
+                    <div className='mx-auto text-center'>
+                      <input type="file" onChange={onFileChange} className='mx-auto' disabled={!Active}/>
+                    </div>
+                      <div className='mx-auto text-center'>
+                        {state.selectedFile?<>
+                      <h2 className='pt-3 text-slate-600 font-bold'>File Details:</h2>
+                      <p className='text-slate-600 font-bold'>File Name: {state.selectedFile.name}</p>
+                      <p className='text-slate-600 font-bold'>File Type: {state.selectedFile.type}</p>
+                      <p className='text-slate-600 font-bold'>
+                          Last Modified:{" "}
+                          {state.selectedFile.lastModifiedDate.toDateString()}
+                      </p>
+
+                      </>:
+                      <></>}
+                      </div>
+                    <div className='mx-auto text-center'> 
+                      <button className='mx-auto mt-10 sm:w-[35%] w-[90%] bg-blue-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-blue-200' onClick={onFileUpload} disabled={!active || !Active}>Upload</button>
+                    </div>
+              </div>
+            </div>
+            <div className='flex justify-between w-[100%] pt-2'>
       {currentStatus=='rejected'?<></>:<button 
         type='submit' 
         onClick={acceptbuttonclick}
-        className='bg-lime-200 mt-3 w-[45%] rounded-lg'
+        className='bg-lime-200 mt-3 w-[40%] rounded-lg'
         disabled={!Active}
        >
         <h2 className='text-lg font-bold p-2 text-lime-700'>{currentStatus=='accepted'?'Accepted':'Accept'}</h2>
@@ -222,7 +253,7 @@ export default function page() {
       {currentStatus=='accepted'?<></>:<button 
         type='submit' 
         onClick={rejectbuttonclick}
-        className='bg-red-200 mt-3 w-[45%] rounded-lg'
+        className='bg-red-200 mt-3 w-[40%] rounded-lg'
         disabled={!Active}
        >
         <h2 className='text-lg font-bold p-2 text-red-700'>{currentStatus=='rejected'?'Rejected':'Reject'}</h2>
