@@ -38,10 +38,10 @@ export default function Home() {
 
   useEffect(() => {
     if (data?.message === 'success') {
-      login(data.data);
+      login(data.data.token, data.data.position);
       router.replace('/dashboard');
-    } else if (data?.errors) {
-      alert(data.errors);
+    } else if (data?.message === 'error' && data?.errors) {
+      setWrongInfo(value => !value);
     }
   }, [data]);
 
@@ -52,10 +52,7 @@ export default function Home() {
   }, [error]);
 
   const authenticateFunction = (e) => {
-    /* if server says incorrect info */
     e.preventDefault();
-    setWrongInfo(value => !value);
-    /* else if correct */
     refetch().catch(err => {
       console.log('[frontend]: ', err);
       alert(err);
