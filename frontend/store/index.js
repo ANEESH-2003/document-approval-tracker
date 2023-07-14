@@ -4,7 +4,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export const useStore = create(persist(
   (set, get) => ({
     token: "",
-    setToken: (token) => set((state) => ({ token })),
+    position: "",
+    setToken: (token, position) => set((state) => ({ token, position })),
   }), {
     name: "document_verify",
     storage: createJSONStorage(() => localStorage),
