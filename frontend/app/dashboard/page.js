@@ -1,6 +1,5 @@
 'use client';
 
-import {useRouter} from "next/navigation";
 import {useStore} from "@/store";
 import UserDashboard from '../components/UserDashboard';
 import AdminDashboard from '../components/AdminDashboard';
