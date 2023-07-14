@@ -4,6 +4,9 @@ import { Listbox, Transition} from '@headlessui/react'
 import { useState, Fragment} from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import SvgComponent from '../document/svgComponent'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+
 const navigation = [
     { name: 'Dashboard', href: '/../UserDashboard', current: false },
     { name: 'Team', href: '#', current: false },
@@ -63,11 +66,26 @@ const navigation = [
     },
   ]
 export default function page() {
-    const uploadbuttonclick=()=>{
-        /* take to the upload page */
-      }
+  const router=useRouter();
+  const [state,setState]=useState({selectedFile:null});
+  const [active,setActive]=useState(true);
+  const onFileChange=(event)=>{
+    setState({selectedFile:event.target.files[0]});
+    setActive(false);
+  }
+  const onFileUpload=()=>{
+    const formData = new FormData();
+    formData.append(
+      "myFile",
+      state.selectedFile,
+      state.selectedFile.name
+    );
+    console.log(state.selectedFile);
+    axios.post("api/uploadfile", formData);
+  }
     const Issuebuttonclick=()=>{
         /* tell teh server */
+        router.back();
     } 
     const [selected, setSelected] = useState(eligibleAssignees[0]);
   return (
@@ -103,7 +121,7 @@ export default function page() {
             </div>
         <div className="mx-auto sm:w-[70%] w-[80%] mt-10">
         <p className='text-xs mx-auto text-slate-600 font-bold mb-0'>Choose the assignee</p>
-        <Listbox value={selected} onChange={setSelected} >
+        <Listbox value={selected} onChange={setSelected} className='mb-10'>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="block truncate">{selected.name} {selected.designation==''?null:<>({selected.designation})</>}</span>
@@ -153,13 +171,27 @@ export default function page() {
           </Transition>
         </div>
       </Listbox>
-      <button 
-            type='submit' 
-            onClick={uploadbuttonclick}
-            className='mx-auto w-[100%] mt-10 bg-blue-400 rounded-lg'
-            >
-            <h2 className='text-lg font-bold p-2 text-white'>Upload Files</h2>
-          </button>
+      <div className='flex-col items-center bg-white w-[100%] mt-10 p-4 mx-auto mt-5 h-[50%] border-dotted border-4 border-blue-600 rounded-xl'>
+                    <div className='mx-auto text-center'>
+                      <input type="file" onChange={onFileChange} className='mx-auto'/>
+                    </div>
+                      <div className='mx-auto text-center'>
+                        {state.selectedFile?<>
+                      <h2 className='pt-3 text-slate-600 font-bold'>File Details:</h2>
+                      <p className='text-slate-600 font-bold'>File Name: {state.selectedFile.name}</p>
+                      <p className='text-slate-600 font-bold'>File Type: {state.selectedFile.type}</p>
+                      <p className='text-slate-600 font-bold'>
+                          Last Modified:{" "}
+                          {state.selectedFile.lastModifiedDate.toDateString()}
+                      </p>
+
+                      </>:
+                      <></>}
+                      </div>
+                  <div className='mx-auto text-center'> 
+                    <button className='mx-auto mt-10 sm:w-[35%] w-[90%] bg-blue-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-blue-200' onClick={onFileUpload} disabled={active}>Upload</button>
+                  </div>
+          </div>
           <button 
             type='submit' 
             onClick={Issuebuttonclick}

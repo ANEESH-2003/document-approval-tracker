@@ -40,7 +40,7 @@ const userDocs = [
 ]
 
 export default function Dashboard() {
-  const router = useRouter();
+
   const acceptedDocs = userDocs.filter((item) => (item.status == 'accepted'));
   const rejectedDocs = userDocs.filter((item) => (item.status == 'rejected'));
   const UCDocs = userDocs.filter((item) => (item.status == 'under-consideration'));
@@ -48,9 +48,6 @@ export default function Dashboard() {
 
   if (!token) {
     router.replace('/signin');
-  }
-  const docOnClick = () => {
-    router.push('/../document');
   }
   return (
     <>
