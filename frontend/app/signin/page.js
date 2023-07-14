@@ -1,47 +1,47 @@
-'use client'
-import {useEffect, useState} from "react"
-import {useRouter} from "next/navigation";
++"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {useQuery} from "react-query";
-import {useStore} from "@/store";
+import { useQuery } from "react-query";
+import { useStore } from "@/store";
 
 export default function Home() {
   const [wrongInfo, setWrongInfo] = useState(false);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const token = useStore(state => state.token);
-  const login = useStore(state => state.setToken);
+  const token = useStore((state) => state.token);
+  const login = useStore((state) => state.setToken);
 
   if (token) {
-    router.replace('/dashboard');
+    router.replace("/dashboard");
   }
 
   const handleLogin = async (email, password) => {
-    return await fetch('http://localhost:8080/api/users/login', {
+    return await fetch("http://localhost:8080/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email,
-        password
+        password,
       }),
-    }).then(res => res.json());
+    }).then((res) => res.json());
   };
 
-  const {data, error, refetch} = useQuery(
+  const { data, error, refetch } = useQuery(
     ["login", email, password],
     () => handleLogin(email, password),
-    {enabled: false}
+    { enabled: false },
   );
 
   useEffect(() => {
-    if (data?.message === 'success') {
+    if (data?.message === "success") {
       login(data.data.token, data.data.position);
-      router.replace('/dashboard');
-    } else if (data?.message === 'error' && data?.errors) {
-      setWrongInfo(value => !value);
+      router.replace("/dashboard");
+    } else if (data?.message === "error" && data?.errors) {
+      setWrongInfo((value) => !value);
     }
   }, [data]);
 
@@ -53,18 +53,27 @@ export default function Home() {
 
   const authenticateFunction = (e) => {
     e.preventDefault();
-    refetch().catch(err => {
-      console.log('[frontend]: ', err);
+    refetch().catch((err) => {
+      console.log("[frontend]: ", err);
       alert(err);
     });
-  }
+  };
 
   return (
-    <div className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8"
-         style={{backgroundImage: 'url(/bgforlogin.jpg)', backgroundSize: 'cover'}}>
+    <div
+      className="flex min-h-screen flex-1 flex-row items-center justify-center px-6 py-12 lg:px-8"
+      style={{
+        backgroundImage: "url(/bgforlogin.jpg)",
+        backgroundSize: "cover",
+      }}
+    >
       <div className="bg-blue-400 p-6 sm:mx-auto sm:w-full sm:max-w-sm rounded-xl">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          {wrongInfo ? <h5 className="text-red-600 font-bold text-center">Email/Password are incorrect</h5> : null}
+          {wrongInfo ? (
+            <h5 className="text-red-600 font-bold text-center">
+              Email/Password are incorrect
+            </h5>
+          ) : null}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             SIGN IN
           </h2>
@@ -73,7 +82,10 @@ export default function Home() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Email address
               </label>
               <div className="mt-2">
@@ -92,7 +104,10 @@ export default function Home() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
                   Password
                 </label>
               </div>
@@ -120,11 +135,15 @@ export default function Home() {
               </button>
               <h5 className="text-center pt-2">
                 Do not have an account?
-                <Link href="/../usersignup" className="text-red-600 font-bold"> Signup </Link></h5>
+                <Link href="/../usersignup" className="text-red-600 font-bold">
+                  {" "}
+                  Signup{" "}
+                </Link>
+              </h5>
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }

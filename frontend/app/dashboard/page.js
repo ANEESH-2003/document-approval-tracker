@@ -8,10 +8,6 @@ import ApprovalDashboard from "../components/ApprovalDashboard";
 import SuperAdminDashboard from "../components/SuperAdminDashboard";
 
 export default function Dashboard() {
-
-  const acceptedDocs = userDocs.filter((item) => (item.status == 'accepted'));
-  const rejectedDocs = userDocs.filter((item) => (item.status == 'rejected'));
-  const UCDocs = userDocs.filter((item) => (item.status == 'under-consideration'));
   const token = useStore(state => state.token);
   const position = useStore((state) => state.position);
 
