@@ -83,8 +83,8 @@ export default function Dashboard() {
               <Tab.Panel>
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {acceptedDocs.map((item) => (
-                    <Link href="/UserDocument">
-                      <li key={item.id}>
+                    <Link key={item.id} href="/UserDocument">
+                      <li >
                         <DocumentComponent doc={item}/>
                       </li>
                     </Link>
@@ -94,8 +94,8 @@ export default function Dashboard() {
               <Tab.Panel>
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {rejectedDocs.map((item) => (
-                    <Link href="/UserDocument">
-                      <li key={item.id}>
+                    <Link key={item.id} href="/UserDocument">
+                      <li >
                         <DocumentComponent doc={item}/>
                       </li>
                     </Link>
@@ -105,8 +105,8 @@ export default function Dashboard() {
               <Tab.Panel>
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {UCDocs.map((item) => (
-                    <Link href="/UserDocument">
-                      <li key={item.id}>
+                    <Link key={item.id} href="/UserDocument">
+                      <li >
                         <DocumentComponent doc={item}/>
                       </li>
                     </Link>

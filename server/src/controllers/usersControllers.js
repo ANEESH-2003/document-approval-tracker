@@ -50,7 +50,7 @@ const signIn = (reqBody, res) => {
         } else {
           newUser.password = hash;
           newUser.save().then(() => {
-            res.json({message: 'success. '});
+            res.json({message: 'success'});
           }).catch((err) => {
             console.log(`[server]: Unable to register \n[server]: ${err}`);
             res.json({message: 'something went wrong. ', errors: err});

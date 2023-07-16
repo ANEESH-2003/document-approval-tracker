@@ -1,34 +1,32 @@
-'use client';
+"use client";
 
-import {useStore} from "@/store";
-import UserDashboard from '../components/UserDashboard';
-import AdminDashboard from '../components/AdminDashboard';
+import { useStore } from "@/store";
+import UserDashboard from "../components/UserDashboard";
+import AdminDashboard from "../components/AdminDashboard";
 import ApprovalDashboard from "../components/ApprovalDashboard";
 import SuperAdminDashboard from "../components/SuperAdminDashboard";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  const token = useStore(state => state.token);
+  const token = useStore((state) => state.token);
   const position = useStore((state) => state.position);
+  const router = useRouter();
 
   if (!token) {
-    router.replace('/signin');
+    router.replace("/signin");
   }
 
-  if (position === 'None') {
-    return (
-      <UserDashboard />
-    )
-  } else if (position === 'Admin') {
-    return (
-      <AdminDashboard />
-    )
-  } else if (position === 'Clark' || position === 'HoD' || position === 'DHoD') {
-    return (
-      <ApprovalDashboard />
-    )
+  if (position === "None") {
+    return <UserDashboard />;
+  } else if (position === "Admin") {
+    return <AdminDashboard />;
+  } else if (
+    position === "Clark" ||
+    position === "HoD" ||
+    position === "DHoD"
+  ) {
+    return <ApprovalDashboard />;
   } else {
-    return (
-      <SuperAdminDashboard />
-    )
+    return <SuperAdminDashboard />;
   }
 }

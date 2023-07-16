@@ -5,7 +5,8 @@ export const useStore = create(persist(
   (set, get) => ({
     token: "",
     position: "",
-    setToken: (token, position) => set((state) => ({ token, position })),
+    setToken: (token, position) => set((state) => ({ ...state, token, position })),
+    logout: () => set((state) => ({ ... state, token: '', position: '' })),
   }), {
     name: "document_verify",
     storage: createJSONStorage(() => localStorage),
