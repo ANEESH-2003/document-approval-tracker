@@ -1,39 +1,42 @@
-'use client'
-import {useRouter} from 'next/navigation'
-import TopBar from '../TopBar/page'
+"use client";
+import { useRouter } from "next/navigation";
+import TopBar from "../TopBar/page";
 
 const navigation = [
-  {name: 'Dashboard', href: '/../SuperAdminDashboard'},
-  {name: 'Team', href: '#', current: false},
-  {name: 'Projects', href: '#', current: true},
-  {name: 'Calendar', href: '#', current: false},
-  {name: 'Reports', href: '#', current: false},
-]
+  { name: "Dashboard", href: "/../SuperAdminDashboard" },
+  { name: "Team", href: "#", current: false },
+  { name: "Projects", href: "#", current: true },
+  { name: "Calendar", href: "#", current: false },
+  { name: "Reports", href: "#", current: false },
+];
 
 export default function page() {
   const router = useRouter();
-  const addbuttonclick = () => {
+  const addButtonClick = () => {
     /* tell the server */
     router.refresh();
-
-  }
-  const removebuttonclick = () => {
+  };
+  const removeButtonClick = () => {
     /* tell the server */
     router.refresh();
-  }
+  };
   return (
     <div className="min-h-full">
-      <TopBar page="AdminDashboard" navigation={navigation}/>
+      <TopBar page="AdminDashboard" navigation={navigation} />
       <header className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Super Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Super Admin Dashboard
+          </h1>
         </div>
       </header>
-      <main className='max-w-[80%] shadow-lg bg-slate-200 mx-auto mt-4 pb-4 rounded-md'>
-        <p className='p-2 pt-5 font-bold text-center text-2xl'>Enter Admin Information</p>
-        <div className='flex flex-col sm:flex-row justify-around '>
-          <div className='mx-auto sm:w-[35%] w-[80%]'>
-            <p className='text-xs text-slate-600 font-bold'>First Name</p>
+      <main className="max-w-[80%] shadow-lg bg-slate-200 mx-auto mt-4 pb-4 rounded-md">
+        <p className="p-2 pt-5 font-bold text-center text-2xl">
+          Enter Admin Information
+        </p>
+        <div className="flex flex-col sm:flex-row justify-around ">
+          <div className="mx-auto sm:w-[35%] w-[80%]">
+            <p className="text-xs text-slate-600 font-bold">First Name</p>
             <input
               type="text"
               name="firstname"
@@ -42,8 +45,8 @@ export default function page() {
               placeholder=" First Name"
             />
           </div>
-          <div className='mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0'>
-            <p className='text-xs text-slate-600 font-bold'>Last Name</p>
+          <div className="mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0">
+            <p className="text-xs text-slate-600 font-bold">Last Name</p>
             <input
               type="text"
               name="lastname"
@@ -53,9 +56,9 @@ export default function page() {
             />
           </div>
         </div>
-        <div className='flex flex-col sm:flex-row justify-around mt-10'>
-          <div className='mx-auto sm:w-[35%] w-[80%]'>
-            <p className='text-xs text-slate-600 font-bold'>E-mail</p>
+        <div className="flex flex-col sm:flex-row justify-around mt-10">
+          <div className="mx-auto sm:w-[35%] w-[80%]">
+            <p className="text-xs text-slate-600 font-bold">E-mail</p>
             <input
               type="text"
               name="email"
@@ -64,8 +67,8 @@ export default function page() {
               placeholder=" E-mail"
             />
           </div>
-          <div className='mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0'>
-            <p className='text-xs text-slate-600 font-bold'>Department Name</p>
+          <div className="mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0">
+            <p className="text-xs text-slate-600 font-bold">Department Name</p>
             <input
               type="text"
               name="Designation"
@@ -75,9 +78,9 @@ export default function page() {
             />
           </div>
         </div>
-        <div className='flex flex-col sm:flex-row justify-around mt-10'>
-          <div className='mx-auto sm:w-[35%] w-[80%]'>
-            <p className='text-xs text-slate-600 font-bold'>Password</p>
+        <div className="flex flex-col sm:flex-row justify-around mt-10">
+          <div className="mx-auto sm:w-[35%] w-[80%]">
+            <p className="text-xs text-slate-600 font-bold">Password</p>
             <input
               type="text"
               name="password"
@@ -86,8 +89,8 @@ export default function page() {
               placeholder=" Password"
             />
           </div>
-          <div className='mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0'>
-            <p className='text-xs text-slate-600 font-bold'>Confirm-Password</p>
+          <div className="mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0">
+            <p className="text-xs text-slate-600 font-bold">Confirm-Password</p>
             <input
               type="text"
               name="confirmpassword"
@@ -97,17 +100,21 @@ export default function page() {
             />
           </div>
         </div>
-        <div className='flex flex-col sm:flex-row justify-around mt-10'>
+        <div className="flex flex-col sm:flex-row justify-around mt-10">
           <button
-            className='mx-auto sm:w-[35%] w-[80%] bg-lime-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-lime-200'
-            onclick={addbuttonclick}>Add Admin
+            className="mx-auto sm:w-[35%] w-[80%] bg-lime-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-lime-200"
+            onClick={addButtonClick}
+          >
+            Add Admin
           </button>
           <button
-            className='mx-auto sm:w-[35%] w-[80%] mt-10 sm:mt-0 bg-red-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-red-200'
-            onclick={removebuttonclick}>Remove Admin
+            className="mx-auto sm:w-[35%] w-[80%] mt-10 sm:mt-0 bg-red-500 p-3 rounded-2xl font-bold text-white shadow-lg transform hover:scale-105 transition duration-100 hover:text-red-200"
+            onClick={removeButtonClick}
+          >
+            Remove Admin
           </button>
         </div>
       </main>
     </div>
-  )
+  );
 }

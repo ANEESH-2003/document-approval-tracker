@@ -13,9 +13,11 @@ export default function Home() {
   const token = useStore((state) => state.token);
   const login = useStore((state) => state.setToken);
 
-  if (token) {
-    router.replace("/dashboard");
-  }
+  useEffect(() => {
+    if (token) {
+      router.replace("/dashboard");
+    }
+  }, [token]);
 
   const handleLogin = async (email, password) => {
     return await fetch("http://localhost:8080/api/users/login", {
