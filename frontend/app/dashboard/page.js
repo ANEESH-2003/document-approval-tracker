@@ -1,129 +1,76 @@
-'use client'
-import Link from 'next/link'
-import DocumentComponent from './DocumentComponent'
-import TopBar from '../TopBar/page'
-import {Tab} from '@headlessui/react'
-import {Fragment} from 'react'
-import {useRouter} from "next/navigation";
-import {useStore} from "@/store";
+"use client";
 
-const navigation = [
-  {name: 'Dashboard', href: '/../dashboard'},
-  {name: 'Team', href: '#', current: false},
-  {name: 'Projects', href: '#', current: true},
-  {name: 'Calendar', href: '#', current: false},
-  {name: 'Reports', href: '#', current: false},
-]
-
-const userDocs = [
-  {
-    id: 1,
-    title: 'fail all the students',
-    status: 'under-consideration',
-    assignedBy: 'sandeep saini',
-    currentlyassigned: 'sdhfbsdbijsdji'
-  },
-  {
-    id: 2,
-    title: 'kill all the students',
-    status: 'accepted',
-    assignedBy: 'laxmi mittal',
-    currentlyassigned: 'sdhfbsdbijsdji'
-  },
-  {
-    id: 3,
-    title: 'pass all the students',
-    status: 'rejected',
-    assignedBy: 'nobody',
-    currentlyassigned: 'sdhfbsdbijsdji'
-  },
-]
+import { useStore } from "@/store";
+import UserDashboard from "../components/UserDashboard";
+import AdminDashboard from "../components/AdminDashboard";
+import ApprovalDashboard from "../components/ApprovalDashboard";
+import SuperAdminDashboard from "../components/SuperAdminDashboard";
+import { useRouter } from "next/navigation";
+import {useEffect, useState} from "react";
+import {useQuery} from "react-query";
 
 export default function Dashboard() {
+  const token = useStore((state) => state.token);
+  const position = useStore((state) => state.position);
+  const router = useRouter();
+  const [reqs, setReqs] = useState([]); // TODO: reqs has all the approval request pass it as a prop and handle the rest
 
-  const acceptedDocs = userDocs.filter((item) => (item.status == 'accepted'));
-  const rejectedDocs = userDocs.filter((item) => (item.status == 'rejected'));
-  const UCDocs = userDocs.filter((item) => (item.status == 'under-consideration'));
-  const token = useStore(state => state.token);
+  const handleReq = async (token) => {
+    return await fetch('http://localhost:8080/api/document/', {
+      method: "GET",
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => res.json());
+  };
+
+  const { data, error, refetch } = useQuery(
+    ["login", token],
+    () => handleReq(token),
+    { enabled: false },
+  );
+
+  useEffect(() => {
+    if (data && data?.message === 'success') {
+      setReqs(data);
+    } else if (data && data?.errors) {
+      // TODO: remove this two and manage the errors
+      console.log(data.errors);
+      alert(data.errors);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+      alert(error);
+    }
+  }, [error])
+
+  useEffect(() => {
+    refetch().catch((err) => {
+      console.log(`[frontend]: ${err}`);
+    });
+  }, []);
 
   if (!token) {
-    router.replace('/signin');
+    router.replace("/signin");
   }
-  return (
-    <>
-      <div className="min-h-full">
-        <TopBar page="Dashboard" navigation={navigation}/>
-        <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">User Dashboard</h1>
-          </div>
-        </header>
-        <main className='w-[100%]'>
-          <Tab.Group>
-            <Tab.List className="flex justify-around w-full pt-3 justify-items-center">
-              <Tab as={Fragment}>{({selected}) => (<button
-                  className={
-                    selected ? 'bg-lime-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-lime-500 font-bold'
-                  }
-                >
-                  Accepted
-                </button>
-              )}</Tab>
-              <Tab as={Fragment}>{({selected}) => (<button
-                  className={
-                    selected ? 'bg-red-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-red-500 font-bold'
-                  }
-                >
-                  Rejected
-                </button>
-              )}</Tab>
-              <Tab as={Fragment}>{({selected}) => (<button
-                  className={
-                    selected ? 'bg-yellow-500 p-2 text-white rounded-xl font-bold' : 'bg-white p-2 text-yellow-500 font-bold'
-                  }
-                >
-                  Under-Consideration
-                </button>
-              )}</Tab>
-            </Tab.List>
-            <Tab.Panels>
-              <Tab.Panel>
-                <ul className="flex-row mx-auto w-[100%] py-6 content-center">
-                  {acceptedDocs.map((item) => (
-                    <Link key={item.id} href="../document">
-                      <li>
-                        <DocumentComponent doc={item}/>
-                      </li>
-                    </Link>
-                  ))}
-                </ul>
-              </Tab.Panel>
-              <Tab.Panel>
-                <ul className="flex-row mx-auto w-[100%] py-6 content-center">
-                  {rejectedDocs.map((item) => (
-                    <Link key={item.id} href="../document">
-                      <li>
-                        <DocumentComponent doc={item}/>
-                      </li>
-                    </Link>
-                  ))}
-                </ul>
-              </Tab.Panel>
-              <Tab.Panel>
-                <ul className="flex-row mx-auto w-[100%] py-6 content-center">
-                  {UCDocs.map((item) => (
-                    <Link key={item.id} href="../document">
-                      <li>
-                        <DocumentComponent doc={item}/>
-                      </li>
-                    </Link>
-                  ))}
-                </ul>
-              </Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
-        </main>
-      </div>
-    </>
-  )
+
+  if (position === "None") {
+    return <UserDashboard />;
+  } else if (position === "Admin") {
+    return <AdminDashboard />;
+  } else if (
+    position === "Clark" ||
+    position === "HoD" ||
+    position === "DHoD"
+  ) {
+    return <ApprovalDashboard />;
+  } else if (position === "Super Admin") {
+    return <SuperAdminDashboard />;
+  } else {
+    return <></>;
+  }
 }
