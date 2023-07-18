@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 export default function Dashboard() {
-  const [token, setDocs] = useStore((state) => [state.token, setDocs]);
+  const [token, setDocs] = useStore((state) => [state.token, state.setDocs]);
   const position = useStore((state) => state.position);
   const router = useRouter();
   // const [reqs, setReqs] = useState([]); // TODO: reqs has all the approval request pass it as a prop and handle the rest
