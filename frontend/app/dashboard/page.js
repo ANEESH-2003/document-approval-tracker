@@ -6,22 +6,22 @@ import AdminDashboard from "../components/AdminDashboard";
 import ApprovalDashboard from "../components/ApprovalDashboard";
 import SuperAdminDashboard from "../components/SuperAdminDashboard";
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
-import {useQuery} from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 export default function Dashboard() {
-  const token = useStore((state) => state.token);
+  const [token, setDocs] = useStore((state) => [state.token, setDocs]);
   const position = useStore((state) => state.position);
   const router = useRouter();
-  const [reqs, setReqs] = useState([]); // TODO: reqs has all the approval request pass it as a prop and handle the rest
+  // const [reqs, setReqs] = useState([]); // TODO: reqs has all the approval request pass it as a prop and handle the rest
 
   const handleReq = async (token) => {
-    return await fetch('http://localhost:8080/api/document/', {
+    return await fetch("http://localhost:8080/api/document/", {
       method: "GET",
       headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      }
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
     }).then((res) => res.json());
   };
 
@@ -32,8 +32,8 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
-    if (data && data?.message === 'success') {
-      setReqs(data);
+    if (data && data?.message === "success") {
+      setDocs(data.data);
     } else if (data && data?.errors) {
       // TODO: remove this two and manage the errors
       console.log(data.errors);
@@ -46,7 +46,7 @@ export default function Dashboard() {
       console.log(error);
       alert(error);
     }
-  }, [error])
+  }, [error]);
 
   useEffect(() => {
     refetch().catch((err) => {
