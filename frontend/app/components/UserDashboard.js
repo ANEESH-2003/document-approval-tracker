@@ -5,6 +5,7 @@ import DocumentComponent from '../components/DocumentComponent'
 import TopBar from '../TopBar/page'
 import {Tab} from '@headlessui/react'
 import {Fragment, useEffect} from 'react'
+import {useStore} from "@/store";
 
 const navigation = [
   {name: 'Dashboard', href: '/../dashboard'},
@@ -39,9 +40,10 @@ const userDocs = [
 ]
 
 export default function Dashboard() {
-  const acceptedDocs = userDocs.filter((item) => (item.status === 'accepted'));
-  const rejectedDocs = userDocs.filter((item) => (item.status === 'rejected'));
-  const UCDocs = userDocs.filter((item) => (item.status === 'under-consideration'));
+  const DocsInfo = useStore((state) => state.docs);
+  const acceptedDocs = DocsInfo.filter((item) => (item.status === 'Accepted'));
+  const rejectedDocs = DocsInfo.filter((item) => (item.status === 'Rejected'));
+  const UCDocs = DocsInfo.filter((item) => (item.status === 'In progress'));
 
   return (
     <>
@@ -102,7 +104,7 @@ export default function Dashboard() {
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {acceptedDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/UserDocument", query: { idx: item.idx } }}
                     >
                       <li>
@@ -116,7 +118,7 @@ export default function Dashboard() {
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {rejectedDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/UserDocument", query: { idx: item.idx } }}
                     >
                       <li>
@@ -130,7 +132,7 @@ export default function Dashboard() {
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {UCDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/UserDocument", query: { idx: item.idx } }}
                     >
                       <li>

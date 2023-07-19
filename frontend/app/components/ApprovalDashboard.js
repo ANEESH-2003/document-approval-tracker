@@ -106,9 +106,9 @@ export default function ApprovalDashboard() {
             <Tab.Panels>
               <Tab.Panel>
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
-                  {acceptedDocs.map((item, idx) => (
+                  {acceptedDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/document", query: { idx: item.idx } }}
                     >
                       <li>
@@ -122,7 +122,7 @@ export default function ApprovalDashboard() {
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
                   {rejectedDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/document", query: { idx: item.idx } }}
                     >
                       <li>
@@ -134,9 +134,9 @@ export default function ApprovalDashboard() {
               </Tab.Panel>
               <Tab.Panel>
                 <ul className="flex-row mx-auto w-[100%] py-6 content-center">
-                  {UCDocs.map((item, idx) => (
+                  {UCDocs.map((item) => (
                     <Link
-                      key={item.id}
+                      key={item.idx}
                       href={{ pathname: "/document", query: { idx: item.idx } }}
                     >
                       <li>
