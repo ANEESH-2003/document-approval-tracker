@@ -1,9 +1,9 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery } from "react-query";
-import { useStore } from "@/store";
 import TopBar from "../TopBar/page";
 
 const navigation = [
@@ -22,7 +22,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const router = useRouter();
-  const token = useStore((state) => state.token);
 
   const handleSignup = async (name, email, phone, password, confirm) => {
     return await fetch("http://localhost:8080/api/users/signup", {
