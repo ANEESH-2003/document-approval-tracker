@@ -3,6 +3,8 @@ import TopBar from "../TopBar/page";
 import UserCard from "../UserCard/page";
 import { useState, Fragment } from "react";
 import SvgComponent from "./svgComponent";
+import {useSearchParams} from "next/navigation";
+import {useStore} from "@/store";
 
 const navigation = [
   { name: "Dashboard", href: "/../dashboard" },
@@ -97,6 +99,12 @@ const docInfo = {
 };
 export default function page() {
   const [currentStatus, setCurrentStatus] = useState(docInfo.status);
+  const query = useSearchParams();
+  const idx = query.get("idx");
+  const Doc = useStore((state) => state.docs[idx]);
+
+  console.log(Doc);
+
   return (
     <div className="min-h-full capitalize">
       <TopBar page="Dashboard" navigation={navigation} />

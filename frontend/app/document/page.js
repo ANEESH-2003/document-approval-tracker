@@ -5,6 +5,8 @@ import { useState, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
+import { useSearchParams } from "next/navigation";
+import { useStore } from "@/store";
 
 const navigation = [
   { name: "Dashboard", href: "/../dashboard" },
@@ -99,16 +101,22 @@ const docInfo = {
 };
 
 export default function page() {
-  const [currentStatus, setcurrentStatus] = useState(docInfo.status);
+  const router = useSearchParams();
+  const [currentStatus, setCurrentStatus] = useState(docInfo.status);
   const [selected, setSelected] = useState(docInfo.eligibleAssignees[0]);
   const [Active, setActive] = useState(true);
+  const idx = router.get("idx");
+  const Doc = useStore((state) => state.docs[idx]);
+
+  console.log(Doc);
+
   const acceptButtonClick = () => {
     setActive(!Active);
-    setcurrentStatus("accepted");
+    setCurrentStatus("accepted");
   };
   const rejectButtonClick = () => {
     setActive(!Active);
-    setcurrentStatus("rejected");
+    setCurrentStatus("rejected");
   };
   const [state, setState] = useState({ selectedFile: null });
   const [active, setActive1] = useState(false);
@@ -119,7 +127,7 @@ export default function page() {
   const onFileUpload = () => {
     const formData = new FormData();
     formData.append("document", state.selectedFile, state.selectedFile.name);
-    formData.append()
+    formData.append();
     console.log(state.selectedFile);
 
     // axios.post("api/uploadfile", formData);
@@ -170,7 +178,11 @@ export default function page() {
                   </h2>
                   <ul className="flex-row pt-3 items-start w-[100%]">
                     {docInfo.signedBy.map((item, idx) => (
-                      <UserCard key={idx} user={item} active={item.versionurl !== ""} />
+                      <UserCard
+                        key={idx}
+                        user={item}
+                        active={item.versionurl !== ""}
+                      />
                     ))}
                   </ul>
                 </div>
