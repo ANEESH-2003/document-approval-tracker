@@ -5,17 +5,12 @@ import UserDashboard from "../components/UserDashboard";
 import AdminDashboard from "../components/AdminDashboard";
 import ApprovalDashboard from "../components/ApprovalDashboard";
 import SuperAdminDashboard from "../components/SuperAdminDashboard";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useQuery } from "react-query";
 
 export default function Dashboard() {
-  const [token, setDocs] = useStore((state) => [state.token, state.setDocs]);
   const position = useStore((state) => state.position);
-  const router = useRouter();
-  const reqs = useStore((state) => state.docs);
-
-  console.log(reqs);
+  const [token, setDocs] = useStore((state) => [state.token, state.setDocs]);
 
   const handleReq = async (token) => {
     return await fetch("http://localhost:8080/api/document/", {
@@ -46,33 +41,25 @@ export default function Dashboard() {
   useEffect(() => {
     if (error) {
       console.log(error);
-      alert(error);
     }
   }, [error]);
 
   useEffect(() => {
-    refetch().catch((err) => {
-      console.log(`[frontend]: ${err}`);
-    });
+    if (token) {
+      refetch().catch((err) => {
+        console.log(`[frontend]: ${err}`);
+      });
+    }
   }, []);
 
-  if (!token) {
-    router.replace("/signin");
-  }
-
-  if (position === "None") {
-    return <UserDashboard />;
-  } else if (position === "Admin") {
-    return <AdminDashboard />;
-  } else if (
-    position === "Clark" ||
-    position === "HoD" ||
-    position === "DHoD"
-  ) {
-    return <ApprovalDashboard />;
-  } else if (position === "Super Admin") {
-    return <SuperAdminDashboard />;
-  } else {
-    return <></>;
-  }
+  return (
+    <>
+      {position === "None" && <UserDashboard />}
+      {position === "Admin" && <AdminDashboard />}
+      {(position === "Clark" || position === "HoD" || position === "DHoD") && (
+        <ApprovalDashboard />
+      )}
+      {position === "Super Admin" && <SuperAdminDashboard />}
+    </>
+  );
 }
