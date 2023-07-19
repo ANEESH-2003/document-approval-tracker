@@ -3,6 +3,7 @@ import TopBar from "../TopBar/page";
 import UserCard from "../UserCard/page";
 import { useState, Fragment } from "react";
 import SvgComponent from "./svgComponent";
+import { useStore } from "@/store";
 
 const navigation = [
   { name: "Dashboard", href: "/../dashboard" },
@@ -96,10 +97,12 @@ const docInfo = {
   ],
 };
 export default function page() {
+  const DocInfo=useStore((state)=>state.docs);
   const [currentStatus, setCurrentStatus] = useState(docInfo.status);
   return (
     <div className="min-h-full capitalize">
       <TopBar page="Dashboard" navigation={navigation} />
+      {console.log("docinfo :" + DocInfo)}
       <main className="max-w-[95%] shadow-lg bg-slate-200 m-10 rounded-md">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex-row">

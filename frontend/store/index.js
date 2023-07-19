@@ -8,7 +8,7 @@ export const useStore = create(persist(
     docs: [],
     setToken: (token, position) => set((state) => ({ ...state, token, position })),
     logout: () => set((state) => ({ ... state, token: '', position: '', docs: [] })),
-    setDocs: () => set((state) => ({ ...state, docs: []})),
+    setDocs: (docs) => set((state) => ({ ...state, docs})),
     removeDocs: () => set((state) => ({ ...state, docs: [] })),
   }), {
     name: "document_verify",
