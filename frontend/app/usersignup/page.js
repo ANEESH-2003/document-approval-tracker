@@ -24,10 +24,6 @@ export default function Home() {
   const router = useRouter();
   const token = useStore((state) => state.token);
 
-  if (token) {
-    router.replace("/dashboard");
-  }
-
   const handleSignup = async (name, email, phone, password, confirm) => {
     return await fetch("http://localhost:8080/api/users/signup", {
       method: "POST",
@@ -51,7 +47,6 @@ export default function Home() {
   );
 
   useEffect(() => {
-    console.log(data);
     if (data?.message === "success") {
       router.replace("/signin");
     } else if (data?.message === "error" && data?.errors) {
