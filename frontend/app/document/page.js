@@ -5,7 +5,6 @@ import { useState, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
-import axios from "axios";
 
 const navigation = [
   { name: "Dashboard", href: "/../dashboard" },
@@ -98,6 +97,7 @@ const docInfo = {
     { id: 6, designation: "vivacity-head", name: "Hellen Schmidt" },
   ],
 };
+
 export default function page() {
   const [currentStatus, setcurrentStatus] = useState(docInfo.status);
   const [selected, setSelected] = useState(docInfo.eligibleAssignees[0]);
@@ -118,7 +118,8 @@ export default function page() {
   };
   const onFileUpload = () => {
     const formData = new FormData();
-    formData.append("myFile", state.selectedFile, state.selectedFile.name);
+    formData.append("document", state.selectedFile, state.selectedFile.name);
+    formData.append()
     console.log(state.selectedFile);
 
     // axios.post("api/uploadfile", formData);

@@ -4,7 +4,6 @@ import { Listbox, Transition} from '@headlessui/react'
 import { useState, Fragment} from 'react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import SvgComponent from '../document/svgComponent'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
 const navigation = [
@@ -81,7 +80,7 @@ export default function page() {
       state.selectedFile.name
     );
     console.log(state.selectedFile);
-    axios.post("api/uploadfile", formData);
+    // axios.post("api/uploadfile", formData);
   }
     const Issuebuttonclick=()=>{
         /* tell teh server */

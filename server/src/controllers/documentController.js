@@ -2,7 +2,6 @@ const cloudinary = require("cloudinary").v2;
 const documentModel = require("../model/documentModel");
 const usersModel = require("../model/usersModel");
 const fs = require("fs");
-const mongoose = require("mongoose");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -11,6 +10,52 @@ cloudinary.config({
   secure: true,
   hide_sensitive: true,
 });
+
+const result = (data, allU) => {
+  return data.map((item) => {
+    const current = allU.find(
+      (it) => it._id.toString() === item.current.toString(),
+    );
+    const owner = allU.find(
+      (it) => it._id.toString() === item.owner.toString(),
+    );
+    const past = item.past.map((p) =>
+      allU.find((item) => item._id.toString() === p._id.toString()),
+    );
+    const url = item.url.map((ur) => ({
+      doc: ur.doc,
+      _id: ur._id,
+      timestamp: ur.timestamp,
+      ...allU.find((item) => item._id.toString() === ur._id.toString()),
+    }));
+    const eligible = allU.filter(
+      (it) =>
+        it._id.toString() !== item.current._id.toString() &&
+        it._id.toString() !== item.owner._id.toString() &&
+        !item.past.find(
+          (it1) => it1._id.toString() === it._id.toString(),
+        ) &&
+        it.position !== 'None' &&
+        it.position !== 'Super Admin' &&
+        it.position !== 'Admin'
+    );
+
+    return {
+      _id: item._id,
+      timestamp: item.timestamp,
+      department: item.department,
+      status: item.status,
+      title: item.title,
+      description: item.description,
+      url,
+      past,
+      current,
+      owner,
+      eligible,
+    };
+  });
+
+}
 
 module.exports = {
   upload: async (req, res) => {
@@ -205,11 +250,33 @@ module.exports = {
   },
 
   myDocs: async (req, res) => {
+    const allU = await usersModel
+      .find({})
+      .then((data) =>
+        data.map((it) => ({
+          _id: it._id,
+          name: it.name,
+          email: it.email,
+          phone: it.phone,
+          position: it.position,
+          department: it.department,
+        })),
+      )
+      .catch((err) => {
+        console.log(
+          `[server]: Unable to fetch the documents. \n[server]: ${err}`,
+        );
+        res.json({
+          message: "Error",
+          errors: "Unable to fetch the documents.",
+        });
+      });
+
     if (req.position === "None") {
       documentModel
         .find({ owner: req.userId })
         .then((data) => {
-          res.json({ message: "success", data });
+          res.json({ message: "success", data: result(data, allU) });
         })
         .catch((err) => {
           console.log(
@@ -235,74 +302,9 @@ module.exports = {
           ],
         })
         .then(async (data) => {
-          const allU = await usersModel
-            .find({})
-            .then((data) =>
-              data.map((it) => ({
-                _id: it._id,
-                name: it.name,
-                email: it.email,
-                phone: it.phone,
-                position: it.position,
-                department: it.department,
-              })),
-            )
-            .catch((err) => {
-              console.log(
-                `[server]: Unable to fetch the documents. \n[server]: ${err}`,
-              );
-              res.json({
-                message: "Error",
-                errors: "Unable to fetch the documents.",
-              });
-            });
-
-          const result = data.map((item) => {
-            const current = allU.find(
-              (it) => it._id.toString() === item.current.toString(),
-            );
-            const owner = allU.find(
-              (it) => it._id.toString() === item.owner.toString(),
-            );
-            const past = item.past.map((p) =>
-              allU.find((item) => item._id.toString() === p._id.toString()),
-            );
-            const url = item.url.map((ur) => ({
-              doc: ur.doc,
-              _id: ur._id,
-              timestamp: ur.timestamp,
-              ...allU.find((item) => item._id.toString() === ur._id.toString()),
-            }));
-            const eligible = allU.filter(
-              (it) =>
-                it._id.toString() !== item.current._id.toString() &&
-                it._id.toString() !== item.owner._id.toString() &&
-                !item.past.find(
-                  (it1) => it1._id.toString() === it._id.toString(),
-                ) &&
-                it.position !== 'None' &&
-                it.position !== 'Super Admin' &&
-                it.position !== 'Admin'
-            );
-
-            return {
-              _id: item._id,
-              timestamp: item.timestamp,
-              department: item.department,
-              status: item.status,
-              title: item.title,
-              description: item.description,
-              url,
-              past,
-              current,
-              owner,
-              eligible,
-            };
-          });
-
           res.json({
             message: "success",
-            data: result,
+            data: result(data, allU),
           });
         });
     }

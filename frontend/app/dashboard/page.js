@@ -30,7 +30,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (data && data?.message === "success") {
-      setDocs(data.data);
+      const temp = data.data.map((item, idx) => ({
+        ...item,
+        idx,
+      }));
+
+      setDocs(temp);
     } else if (data && data?.errors) {
       // TODO: remove this two and manage the errors
       console.log(data.errors);
