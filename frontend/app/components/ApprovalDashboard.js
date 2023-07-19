@@ -4,6 +4,7 @@ import DocumentComponent from './DocumentComponent'
 import TopBar from '../TopBar/page'
 import {Tab} from '@headlessui/react'
 import {Fragment} from 'react';
+import { useStore } from "@/store";
 
 const navigation = [
   {name: 'Dashboard', href: '/../dashboard'},
@@ -38,6 +39,7 @@ const userDocs = [
 ]
 
 export default function ApprovalDashboard() {
+  const DocInfo=useStore((state)=>state.docs);
   const acceptedDocs = userDocs.filter((item) => (item.status == 'accepted'));
   const rejectedDocs = userDocs.filter((item) => (item.status == 'rejected'));
   const UCDocs = userDocs.filter((item) => (item.status == 'under-consideration'));
@@ -46,6 +48,7 @@ export default function ApprovalDashboard() {
     <>
       <div className="min-h-full">
         <TopBar page="Dashboard" navigation={navigation}/>
+        {console.log("docinfo :" + DocInfo)}
         <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>

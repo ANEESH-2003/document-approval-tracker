@@ -7,7 +7,7 @@ import {Tab} from '@headlessui/react'
 import {Fragment, useEffect} from 'react'
 
 const navigation = [
-  {name: 'Dashboard', href: '/../UserDashboard'},
+  {name: 'Dashboard', href: '/../dashboard'},
   {name: 'Team', href: '#', current: false},
   {name: 'Projects', href: '#', current: true},
   {name: 'Issue Application', href: '../IssueApplication', current: false},

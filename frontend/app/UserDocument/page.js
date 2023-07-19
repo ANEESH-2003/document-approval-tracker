@@ -5,7 +5,7 @@ import { useState, Fragment } from "react";
 import SvgComponent from "./svgComponent";
 
 const navigation = [
-  { name: "Dashboard", href: "/../UserDashboard" },
+  { name: "Dashboard", href: "/../dashboard" },
   { name: "Team", href: "#", current: false },
   { name: "Projects", href: "#", current: true },
   { name: "Issue Application", href: "../IssueApplication", current: false },
