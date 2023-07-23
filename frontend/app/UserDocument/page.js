@@ -189,7 +189,7 @@ export default function page() {
   const query = useSearchParams();
   const idx = query.get("idx");
   const Doc = useStore((state) => state.docs[idx]);
-  const [currentStatus, setCurrentStatus] = useState(Doc.status);
+  const [currentStatus, setCurrentStatus] = useState(Doc.status || "");
   console.log(Doc); 
   const PastReviewers=Doc.past;
   const Attachments=[];
@@ -206,7 +206,7 @@ export default function page() {
       Attachments.push(Doc.url[i]);
   }
   return (
-    <div className="min-h-full capitalize">
+    <div className="min-h-screen capitalize">
       <TopBar page="Dashboard" navigation={navigation} />
       <main className="max-w-[95%] shadow-lg bg-slate-200 m-10 rounded-md">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">

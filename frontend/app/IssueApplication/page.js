@@ -7,7 +7,7 @@ import SvgComponent from '../document/svgComponent'
 import { useRouter } from 'next/navigation'
 
 const navigation = [
-    { name: 'Dashboard', href: '/../UserDashboard', current: false },
+    { name: 'Dashboard', href: '/../dashboard', current: false },
     { name: 'Team', href: '#', current: false },
     { name: 'Projects', href: '#', current: true }  ,
     { name: 'Issue Application', href: '/../IssueApplication'},

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function SvgComponent(props) {
   return (
-    <Link className="max-w-[100%] flex bg-white mr-2 rounded-xl p-1 mt-2" href={props.att.doc} target='_blank'>
+    <Link className="max-w-[100%] flex bg-white mr-2 rounded-xl p-1 mt-2" href={props.att==undefined?"":props.att.doc} target='_blank'>
         <svg
         width="25px"
         height="25px"
