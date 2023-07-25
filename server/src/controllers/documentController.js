@@ -32,12 +32,10 @@ const result = (data, allU) => {
       (it) =>
         it._id.toString() !== item.current._id.toString() &&
         it._id.toString() !== item.owner._id.toString() &&
-        !item.past.find(
-          (it1) => it1._id.toString() === it._id.toString(),
-        ) &&
-        it.position !== 'None' &&
-        it.position !== 'Super Admin' &&
-        it.position !== 'Admin'
+        !item.past.find((it1) => it1._id.toString() === it._id.toString()) &&
+        it.position !== "None" &&
+        it.position !== "Super Admin" &&
+        it.position !== "Admin",
     );
 
     return {
@@ -54,8 +52,7 @@ const result = (data, allU) => {
       eligible,
     };
   });
-
-}
+};
 
 module.exports = {
   upload: async (req, res) => {
@@ -66,27 +63,27 @@ module.exports = {
 
     if (req.position !== "None") {
       res.json({
-        message: "Error",
+        message: "error",
         errors: "You are not allowed to make a request",
       });
     } else if (current === "") {
       res.json({
-        message: "Error",
+        message: "error",
         data: { current: "This filed cannot be empty " },
       });
     } else if (department === "") {
       res.json({
-        message: "Error",
+        message: "error",
         data: { department: "This filed cannot be empty " },
       });
     } else if (title.length <= 0 || title.length >= 251) {
       res.json({
-        message: "Error",
+        message: "error",
         data: { title: "Title should be between 1 to 250 characters in size" },
       });
     } else if (desc.length <= 0 || desc.length >= 2501) {
       res.json({
-        message: "Error",
+        message: "error",
         data: {
           desc: "Description should be between 1 to 2500 characters in size",
         },
@@ -108,7 +105,7 @@ module.exports = {
 
         newDoc.save().then((result1) => {
           res.json({
-            message: "Document uploaded successfully",
+            message: "success",
             data: result1._id,
           });
         });
@@ -133,12 +130,12 @@ module.exports = {
     try {
       if (nextId === "" && status === "In progress") {
         res.json({
-          message: "Error",
+          message: "error",
           data: { next: "This field cannot be empty" },
         });
       } else if (id === "") {
         res.json({
-          message: "Error",
+          message: "error",
           data: { id: "This field cannot be empty" },
         });
       } else if (
@@ -147,7 +144,7 @@ module.exports = {
         req.position !== "Clark"
       ) {
         res.json({
-          message: "Error",
+          message: "error",
           errors: "You are not allowed to approve the request",
         });
       } else {
@@ -172,7 +169,7 @@ module.exports = {
             .then((data) => {
               if (data.status === "Rejected" || data.status === "Accepted") {
                 res.json({
-                  message: "Error",
+                  message: "error",
                   errors: `This request has already been ${data.status}`,
                 });
               } else if (data.current.toString() === req.userId) {
@@ -214,7 +211,7 @@ module.exports = {
                   });
               } else {
                 res.json({
-                  message: "Error",
+                  message: "error",
                   errors: "You are not allowed to approve the request 1",
                 });
               }
@@ -230,7 +227,7 @@ module.exports = {
             });
         } else {
           res.json({
-            message: "Error",
+            message: "error",
             errors: "Cannot pass the request to this user",
           });
         }
@@ -267,7 +264,7 @@ module.exports = {
           `[server]: Unable to fetch the documents. \n[server]: ${err}`,
         );
         res.json({
-          message: "Error",
+          message: "error",
           errors: "Unable to fetch the documents.",
         });
       });
@@ -283,7 +280,7 @@ module.exports = {
             `[server]: Unable to fetch the documents. \n[server]: ${err}`,
           );
           res.json({
-            message: "Error",
+            message: "error",
             errors: "Unable to fetch the documents.",
           });
         });

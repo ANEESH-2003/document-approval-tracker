@@ -3,8 +3,8 @@ import TopBar from "../TopBar/page";
 import UserCard from "../UserCard/page";
 import { useState, Fragment } from "react";
 import SvgComponent from "./svgComponent";
-import {useSearchParams} from "next/navigation";
-import {useStore} from "@/store";
+import { useSearchParams } from "next/navigation";
+import { useStore } from "@/store";
 import { useRouter } from "next/navigation";
 
 const navigation = [
@@ -190,21 +190,17 @@ export default function page() {
   const idx = query.get("idx");
   const Doc = useStore((state) => state.docs[idx]);
   const [currentStatus, setCurrentStatus] = useState(Doc.status || "");
-  console.log(Doc); 
-  const PastReviewers=Doc.past;
-  const Attachments=[];
-  for(let i=0;i<Doc.url.length;i++)
-  {
-    for(let j=0;j<PastReviewers.length;j++)
-    {
-      if(Doc.url[i]._id===PastReviewers[j]._id)
-      {
-        PastReviewers[j].versionurl=Doc.url[i].doc;
+  const PastReviewers = Doc.past;
+  const Attachments = [];
+  for (let i = 0; i < Doc.url.length; i++) {
+    for (let j = 0; j < PastReviewers.length; j++) {
+      if (Doc.url[i]._id === PastReviewers[j]._id) {
+        PastReviewers[j].versionurl = Doc.url[i].doc;
       }
     }
-    if(Doc.url[i].doc!=undefined)
-      Attachments.push(Doc.url[i]);
+    if (Doc.url[i].doc !== undefined) Attachments.push(Doc.url[i]);
   }
+
   return (
     <div className="min-h-screen capitalize">
       <TopBar page="Dashboard" navigation={navigation} />
@@ -252,7 +248,7 @@ export default function page() {
                   <UserCard
                     key={item._id}
                     user={item}
-                    active={item.versionurl!=undefined}
+                    active={item.versionurl != undefined}
                   />
                 ))}
               </ul>

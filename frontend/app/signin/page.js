@@ -146,7 +146,7 @@ export default function Home() {
               </h5>
             </div>
             </main>
-            <div class="sm:fixed bottom-0 w-[100%] pt-3">
+            <div className="sm:fixed bottom-0 w-[100%] pt-3">
             <Footer/>
             </div>
     </div>
