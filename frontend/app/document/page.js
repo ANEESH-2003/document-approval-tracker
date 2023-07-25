@@ -191,10 +191,8 @@ export default function page() {
   const idx = router.get("idx");
   const Doc = useStore((state) => state.docs[idx]);
   const [currentStatus, setCurrentStatus] = useState(Doc.status);
-  const [selected, setSelected] = useState({name: "None",position:""});
+  const [selected, setSelected] = useState({ name: "None", position: "" });
   const [Active, setActive] = useState(true);
-
-  console.log(Doc);
 
   const acceptButtonClick = () => {
     setActive(!Active);
@@ -218,19 +216,17 @@ export default function page() {
 
     // axios.post("api/uploadfile", formData);
   };
-  const PastReviewers=Doc.past;
-  const Attachments=[];
-  for(let i=0;i<Doc.url.length;i++)
-  {
-    for(let j=0;j<PastReviewers.length;j++)
-    {
-      if(Doc.url[i]._id===PastReviewers[j]._id)
-      {
-        PastReviewers[j].versionurl=Doc.url[i].doc;
+
+  const PastReviewers = Doc.past;
+
+  const Attachments = [];
+  for (let i = 0; i < Doc.url.length; i++) {
+    for (let j = 0; j < PastReviewers.length; j++) {
+      if (Doc.url[i]._id === PastReviewers[j]._id) {
+        PastReviewers[j].versionurl = Doc.url[i].doc;
       }
     }
-    if(Doc.url[i].doc!=undefined)
-      Attachments.push(Doc.url[i]);
+    if (Doc.url[i].doc !== undefined) Attachments.push(Doc.url[i]);
   }
   return (
     <div className="min-h-full capitalize">
@@ -271,22 +267,22 @@ export default function page() {
           </h3>
           <div className="flex flex-wrap justify-between">
             <div className="sm:w-[40%] w-[100%]">
-            {PastReviewers === 0 ? null : (
-            <div className="flex-row">
-              <h2 className="text-sm font-normal leading-6 text-gray-900 pt-3">
-                Till now this document has been signed by:
-              </h2>
-              <ul className="flex-row max-w-sm pt-3 items-start">
-                {PastReviewers.map((item) => (
-                  <UserCard
-                    key={item._id}
-                    user={item}
-                    active={item.versionurl!=undefined}
-                  />
-                ))}
-              </ul>
-            </div>
-          )}
+              {PastReviewers === 0 ? null : (
+                <div className="flex-row">
+                  <h2 className="text-sm font-normal leading-6 text-gray-900 pt-3">
+                    Till now this document has been signed by:
+                  </h2>
+                  <ul className="flex-row max-w-sm pt-3 items-start">
+                    {PastReviewers.map((item) => (
+                      <UserCard
+                        key={item._id}
+                        user={item}
+                        active={item.versionurl != undefined}
+                      />
+                    ))}
+                  </ul>
+                </div>
+              )}
               <p className="text-sm font-normal leading-6 text-gray-900 pt-3 w-[100%]">
                 Whom should you further assign this complaint to:
               </p>
