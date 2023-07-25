@@ -238,7 +238,7 @@ export default function page() {
           <h3 className="text-sm font-semibold leading-6 text-gray-900 pt-3">
             {Doc.description}
           </h3>
-          {PastReviewers === 0 ? null : (
+          {PastReviewers.length === 0 ? null : (
             <div className="flex-row">
               <h2 className="text-sm font-normal leading-6 text-gray-900 pt-3">
                 Till now this document has been signed by:

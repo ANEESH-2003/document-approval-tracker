@@ -267,7 +267,7 @@ export default function page() {
           </h3>
           <div className="flex flex-wrap justify-between">
             <div className="sm:w-[40%] w-[100%]">
-              {PastReviewers === 0 ? null : (
+              {PastReviewers.length === 0 ? null : (
                 <div className="flex-row">
                   <h2 className="text-sm font-normal leading-6 text-gray-900 pt-3">
                     Till now this document has been signed by:

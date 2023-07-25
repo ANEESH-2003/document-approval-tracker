@@ -170,7 +170,7 @@ export default function Dashboard() {
             </Tab.List>
             <Tab.Panels>
               <Tab.Panel>
-                {acceptedDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 content-center">
+                {acceptedDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 mt-5 content-center">
                   {acceptedDocs.map((item) => (
                     <Link
                     key={item.idx}
@@ -184,7 +184,7 @@ export default function Dashboard() {
                 </ul>}
               </Tab.Panel>
               <Tab.Panel>
-                {rejectedDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 content-center">
+                {rejectedDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 mt-5 content-center">
                   {rejectedDocs.map((item) => (
                     <Link
                     key={item.idx}
@@ -198,7 +198,7 @@ export default function Dashboard() {
                 </ul>}
               </Tab.Panel>
               <Tab.Panel>
-                {UCDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 content-center">
+                {UCDocs.length==0?<EmptyComponent/>:<ul className="flex-row mx-auto w-[100%] py-6 mt-5 content-center">
                   {UCDocs.map((item) => (
                     <Link
                     key={item.idx}

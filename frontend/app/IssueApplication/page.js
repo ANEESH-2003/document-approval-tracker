@@ -17,48 +17,6 @@ const navigation = [
   { name: "Reports", href: "#", current: false },
 ];
 
-const attachments = [
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc1doc1doc1doc1doc1",
-    id: 1,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc2",
-    id: 2,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc2",
-    id: 3,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc1doc1doc1doc1doc1",
-    id: 1,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc2",
-    id: 2,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc2",
-    id: 3,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc1doc1doc1doc1doc1",
-    id: 1,
-  },
-  {
-    url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-    name: "doc2",
-    id: 2,
-  },
-];
 export default function page() {
   const router = useRouter();
   const [state, setState] = useState({ selectedFile: null });
@@ -188,13 +146,6 @@ export default function page() {
           <p className="p-2 pt-5 font-bold text-center text-2xl">
             Enter Application Information
           </p>
-          <ul className="flex justify-start flex-wrap mx-auto w-[80%] sm:w-[70%]">
-            {attachments.map((item, idx) => (
-              <li key={idx}>
-                <SvgComponent doc={item} key={item.id} />
-              </li>
-            ))}
-          </ul>
           <div className="mx-auto w-[80%] sm:w-[70%] mt-10">
             <p className="text-xs text-slate-600 font-bold">Title</p>
             <input
@@ -203,16 +154,16 @@ export default function page() {
               id="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" Title"
+              className="px-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Title"
             />
           </div>
           <div className="mx-auto sm:w-[70%] w-[80%] mt-10">
             <p className="text-xs text-slate-600 font-bold">Description</p>
             <textarea
               id="description"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" Description"
+              className="px-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Description"
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
             />
@@ -321,7 +272,7 @@ export default function page() {
             <button
               type="submit"
               onClick={issueButtonClick}
-              className="mx-auto w-[100%] mt-10 bg-lime-400 rounded-lg"
+              className="mx-auto w-[100%] mt-10 bg-lime-400 rounded-lg shadow-lg transform hover:scale-105 transition duration-100 hover:text-blue-200"
             >
               <h2 className="text-lg font-bold p-2 text-white">Issue</h2>
             </button>
