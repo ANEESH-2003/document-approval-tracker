@@ -5,23 +5,20 @@ import UserDashboard from "../components/UserDashboard";
 import AdminDashboard from "../components/AdminDashboard";
 import ApprovalDashboard from "../components/ApprovalDashboard";
 import SuperAdminDashboard from "../components/SuperAdminDashboard";
-import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
-import {useQuery} from "react-query";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
 
 export default function Dashboard() {
-  const token = useStore((state) => state.token);
   const position = useStore((state) => state.position);
-  const router = useRouter();
-  const [reqs, setReqs] = useState([]); // TODO: reqs has all the approval request pass it as a prop and handle the rest
+  const [token, setDocs] = useStore((state) => [state.token, state.setDocs]);
 
   const handleReq = async (token) => {
-    return await fetch('http://localhost:8080/api/document/', {
+    return await fetch("http://localhost:8080/api/document/", {
       method: "GET",
       headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      }
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
     }).then((res) => res.json());
   };
 
@@ -32,8 +29,13 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
-    if (data && data?.message === 'success') {
-      setReqs(data);
+    if (data && data?.message === "success") {
+      const temp = data.data.map((item, idx) => ({
+        ...item,
+        idx,
+      }));
+
+      setDocs(temp);
     } else if (data && data?.errors) {
       // TODO: remove this two and manage the errors
       console.log(data.errors);
@@ -44,33 +46,25 @@ export default function Dashboard() {
   useEffect(() => {
     if (error) {
       console.log(error);
-      alert(error);
     }
-  }, [error])
+  }, [error]);
 
   useEffect(() => {
-    refetch().catch((err) => {
-      console.log(`[frontend]: ${err}`);
-    });
+    if (token) {
+      refetch().catch((err) => {
+        console.log(`[frontend]: ${err}`);
+      });
+    }
   }, []);
 
-  if (!token) {
-    router.replace("/signin");
-  }
-
-  if (position === "None") {
-    return <UserDashboard />;
-  } else if (position === "Admin") {
-    return <AdminDashboard />;
-  } else if (
-    position === "Clark" ||
-    position === "HoD" ||
-    position === "DHoD"
-  ) {
-    return <ApprovalDashboard />;
-  } else if (position === "Super Admin") {
-    return <SuperAdminDashboard />;
-  } else {
-    return <></>;
-  }
+  return (
+    <>
+      {position === "None" && <UserDashboard />}
+      {position === "Admin" && <AdminDashboard />}
+      {(position === "Clark" || position === "HoD" || position === "DHoD") && (
+        <ApprovalDashboard />
+      )}
+      {position === "Super Admin" && <SuperAdminDashboard />}
+    </>
+  );
 }

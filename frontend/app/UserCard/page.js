@@ -4,7 +4,7 @@ export default function page(props) {
   const active = props.active;
   return (
     <div className="w-[100%]">
-      <div className="flex justify-between py-2 my-3 w-[100%] text-lg bg-slate-100 rounded-md overflow-hidden shadow-lg transform hover:scale-105 transition duration-100">
+      <div className="flex justify-between py-2 my-3 w-[100%] text-lg bg-white rounded-md overflow-hidden shadow-lg transform hover:scale-105 transition duration-100">
         <div className="pl-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"

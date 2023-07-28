@@ -1,14 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import TopBar from "../TopBar/page";
-
-const navigation = [
-  { name: "Dashboard", href: "/../SuperAdminDashboard" },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: true },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
 
 export default function page() {
   const router = useRouter();
@@ -21,8 +12,7 @@ export default function page() {
     router.refresh();
   };
   return (
-    <div className="min-h-full">
-      <TopBar page="AdminDashboard" navigation={navigation} />
+    <div className="min-h-screen">
       <header className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
