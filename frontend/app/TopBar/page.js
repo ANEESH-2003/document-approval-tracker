@@ -5,29 +5,82 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useStore } from "@/store";
 import { useRouter } from "next/navigation";
+import { usePathname } from 'next/navigation'
 
 const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
+  name: "User",
+  email: "",
 };
 
-const userNavigation = [
+const CommonNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
   { name: "Sign out", href: "/../signin" },
 ];
-
+const UserNavigation = [
+  { name: "Dashboard", href: "/../dashboard" },
+  { name: "Team", href: "#" },
+  { name: "Projects", href: "#"},
+  { name: "Issue Application", href: "../IssueApplication" },
+  { name: "Reports", href: "#" },
+];
+const NoneNavigation = [
+  {name: "SignIn", href: '/../signin', current:true},
+  {name: "SignUp", href: '/../usersignup', current: false},
+]
+const AdminNavigation = [
+  {name: "Dashboard", href: '/../dashboard'},
+  {name: 'Team', href: '#', current: false},
+  {name: 'Projects', href: '#', current: true},
+  {name: 'Calendar', href: '#', current: false},
+  {name: 'Reports', href: '#', current: false},
+]
+const EmployeeNavigation = [
+  { name: "Dashboard", href: "/../dashboard" },
+  { name: "Team", href: "#", current: false },
+  { name: "Projects", href: "#", current: true },
+  { name: "Calendar", href: "#", current: false },
+  { name: "Reports", href: "#", current: false },
+];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function TopBar(props) {
-  const navigation = props.navigation;
+  const position=useStore((state) => state.position);
+  var navigation=[];
+  user.name=position; 
+  if(position=="")
+      navigation=NoneNavigation;
+  else if(position=="Admin")
+      navigation=AdminNavigation;
+  else if(position=="Super Admin")
+      navigation=AdminNavigation;
+  else if(position=="None")
+      navigation=UserNavigation; 
+  else
+      navigation=EmployeeNavigation; 
   const logout = useStore((state) => state.logout);
   const router = useRouter();
+  
+  const pathname = usePathname()
+  var CurrentPage="none";
+  if(pathname=="/dashboard")
+      CurrentPage=="Dashboard"
+  else if(pathname=="/signin")
+      CurrentPage=="SignIn"
+  else if(pathname=="/usersignup")
+      CurrentPage=="SignUp"
+  else if(pathname=="/IssueApplication")
+      CurrentPage=="Issue Application"
+  else if(pathname=="/UserDocument")
+      CurrentPage=="Dashboard"
+  else if(pathname=="/document")
+      CurrentPage=="Dashboard" 
 
   return (
     <>
+    {console.log("path : "+pathname)}
       <Disclosure as="nav" className="bg-gray-800">
         {({ open }) => (
           <>
@@ -44,7 +97,7 @@ export default function TopBar(props) {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            props.page === item.name
+                            CurrentPage == item.name
                               ? "bg-gray-900 text-white"
                               : "text-gray-300 hover:bg-gray-700 hover:text-white",
                             "rounded-md px-3 py-2 text-sm font-medium",
@@ -97,7 +150,7 @@ export default function TopBar(props) {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
+                          {CommonNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
                                 <button
@@ -144,7 +197,7 @@ export default function TopBar(props) {
                     as="a"
                     href={item.href}
                     className={classNames(
-                      item.current
+                      CurrentPage == item.name
                         ? "bg-gray-900 text-white"
                         : "text-gray-300 hover:bg-gray-700 hover:text-white",
                       "block rounded-md px-3 py-2 text-base font-medium",
@@ -191,10 +244,10 @@ export default function TopBar(props) {
                   </button>
                 </div>
                 <div className="mt-3 space-y-1 px-2">
-                  {userNavigation.map((item) => (
+                  {CommonNavigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
-                      as="button"
+                      as="a"
                       onClick={() => {
                         if (item.name === "Sign out") {
                           logout();

@@ -2,19 +2,10 @@
 
 import Link from 'next/link'
 import DocumentComponent from '../components/DocumentComponent'
-import TopBar from '../TopBar/page'
 import {Tab} from '@headlessui/react'
 import {Fragment, useEffect} from 'react'
 import { useStore } from "@/store";
 import EmptyComponent from "../EmptyComponent/page"
-
-const navigation = [
-  {name: 'Dashboard', href: '/../dashboard'},
-  {name: 'Team', href: '#', current: false},
-  {name: 'Projects', href: '#', current: true},
-  {name: 'Issue Application', href: '../IssueApplication', current: false},
-  {name: 'Reports', href: '#', current: false},
-]
 
 const userDocs = [
   {
@@ -133,8 +124,7 @@ export default function Dashboard() {
   const UCDocs = DocInfo.filter((item) => (item.status == "In progress"));
   return (
     <>
-      <div className="min-h-full">
-        <TopBar page="Dashboard" navigation={navigation}/>
+      <div className="min-h-screen capitalize">
         <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">User Dashboard</h1>

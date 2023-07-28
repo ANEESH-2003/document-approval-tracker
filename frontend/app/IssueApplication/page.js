@@ -1,9 +1,7 @@
 "use client";
-import TopBar from "../TopBar/page";
 import { Listbox, Transition } from "@headlessui/react";
 import { useState, Fragment, useEffect } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import SvgComponent from "../document/svgComponent";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/store";
 import { useQuery } from "react-query";
@@ -140,7 +138,6 @@ export default function page() {
 
   return (
     <div className="min-h-full capitalize">
-      <TopBar page="Issue Application" navigation={navigation} />
       <main className="max-w-[95%] shadow-lg bg-slate-200 m-10 rounded-md">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <p className="p-2 pt-5 font-bold text-center text-2xl">

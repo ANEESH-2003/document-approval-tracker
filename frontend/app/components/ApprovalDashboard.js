@@ -1,46 +1,10 @@
 "use client";
 import Link from "next/link";
 import DocumentComponent from "./DocumentComponent";
-import TopBar from "../TopBar/page";
 import { Tab } from "@headlessui/react";
 import { Fragment } from "react";
 import { useStore } from "@/store";
 import EmptyComponent from "../EmptyComponent/page";
-
-const navigation = [
-  { name: "Dashboard", href: "/../dashboard" },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: true },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
-
-const userDocs = [
-  {
-    id: 1,
-    idx: 0,
-    title: "fail all the students",
-    status: "under-consideration",
-    assignedBy: "sandeep saini",
-    currentlyassigned: "sdhfbsdbijsdji",
-  },
-  {
-    id: 2,
-    idx: 0,
-    title: "kill all the students",
-    status: "accepted",
-    assignedBy: "laxmi mittal",
-    currentlyassigned: "sdhfbsdbijsdji",
-  },
-  {
-    idx: 0,
-    id: 3,
-    title: "pass all the students",
-    status: "rejected",
-    assignedBy: "nobody",
-    currentlyassigned: "sdhfbsdbijsdji",
-  },
-];
 
 export default function ApprovalDashboard() {
   const DocInfo = useStore((state) => state.docs);
@@ -50,8 +14,7 @@ export default function ApprovalDashboard() {
 
   return (
     <>
-      <div className="min-h-full">
-        <TopBar page="Dashboard" navigation={navigation} />
+      <div className="min-h-screen">
         <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">

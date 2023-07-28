@@ -4,16 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery } from "react-query";
-import TopBar from "../TopBar/page";
-import Footer from "../footer/page";
-
-const navigation = [
-  {name: 'SignUp', href: '/../usersignup', current:true},
-  {name: 'Team', href: '#', current: false},
-  {name: 'Projects', href: '#', current: false},
-  {name: 'Calendar', href: '#', current: false},
-  {name: 'Reports', href: '#', current: false},
-]
 
 export default function Home() {
   const [wrongInfo, setWrongInfo] = useState(false);
@@ -71,9 +61,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-full">
-      {/* change the topbar so it doesn't show the username in sign in and sign out */}
-      <TopBar page="AdminDashboard" navigation={navigation} />
+    <div className="min-h-screen">
       <header className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Sign Up</h1>
@@ -193,9 +181,6 @@ export default function Home() {
               </h5>
             </div>
         </main>
-        <div class="sm:fixed bottom-0 w-[100%] pt-3">
-            <Footer/>
-            </div>
     </div>
   );
 }
