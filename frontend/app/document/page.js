@@ -6,102 +6,16 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStore } from "@/store";
-import {useQuery} from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
-/* "data": [
-        {
-            "_id": "64ad3325509e1948f7b6600e",
-            "timestamp": "2023-07-11T10:44:52.712Z",
-            "department": "Dep1",
-            "status": "In progress",
-            "title": "Test Doc",
-            "description": "This is a test document.",
-            "url": [
-                {
-                    "doc": "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1689072421/v20mmwpymnxeursyx8oa.pdf",
-                    "_id": "64ad3325509e1948f7b6600f",
-                    "timestamp": "2023-07-11T10:47:01.777Z"
-                },
-                {
-                    "_id": "64ad384a80bdfb0651f77205",
-                    "timestamp": "2023-07-11T11:08:58.065Z"
-                },
-                {
-                    "_id": "64ad3999fafb337b7f3f29d4",
-                    "timestamp": "2023-07-11T11:14:33.150Z"
-                },
-                {
-                    "doc": "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1689074452/uf4klpjiat9ydeg8yl2n.pdf",
-                    "_id": "64ad32d4509e1948f7b6600a",
-                    "timestamp": "2023-07-11T11:20:52.785Z",
-                    "name": "DHoD Dep1",
-                    "email": "dhod@dep1.com",
-                    "phone": "7869452130",
-                    "position": "DHoD",
-                    "department": "Dep1"
-                }
-            ],
-            "past": [
-                {
-                    "_id": "64ad32ac509e1948f7b66007",
-                    "name": "Clark Dep1",
-                    "email": "clark@dep1.com",
-                    "phone": "8769452130",
-                    "position": "Clark",
-                    "department": "Dep1"
-                },
-                {
-                    "_id": "64ad32d4509e1948f7b6600a",
-                    "name": "DHoD Dep1",
-                    "email": "dhod@dep1.com",
-                    "phone": "7869452130",
-                    "position": "DHoD",
-                    "department": "Dep1"
-                },
-                {
-                    "_id": "64ad32d4509e1948f7b6600a",
-                    "name": "DHoD Dep1",
-                    "email": "dhod@dep1.com",
-                    "phone": "7869452130",
-                    "position": "DHoD",
-                    "department": "Dep1"
-                }
-            ],
-            "current": {
-                "_id": "64ad2db209839fe91b3962cc",
-                "name": "HoD Dep1",
-                "email": "hod@dep1.com",
-                "phone": "8796452130",
-                "position": "HoD",
-                "department": "Dep1"
-            },
-            "owner": {
-                "_id": "64a558d56424bcfe508f15f6",
-                "name": "Test Sample",
-                "email": "test@example.com",
-                "phone": "9876543210",
-                "position": "None",
-                "department": "None"
-            },
-            "eligible": [
-                {
-                    "_id": "64a594327df2566ac3636032",
-                    "name": "DHoD DHoD",
-                    "email": "dhod@xyz.com",
-                    "phone": "9876543210",
-                    "position": "DHoD",
-                    "department": "XYZ"
-                }
-            ]
-        }
-    ] */
 
 export default function page() {
   const router = useSearchParams();
+  const route = useRouter();
   const idx = router.get("idx");
   const Doc = useStore((state) => state.docs[idx]);
   const [currentStatus, setCurrentStatus] = useState(Doc?.status || "");
-  const [selected, setSelected] = useState({ name: "None", position: "" });
+  const [selected, setSelected] = useState({ name: "None", position: "", _id: -1 });
   const [Active, setActive] = useState(true);
   const [state, setState] = useState({ selectedFile: null });
   const [active, setActive1] = useState(false);
@@ -114,35 +28,24 @@ export default function page() {
       body.append("document", state.selectedFile, state.selectedFile.name);
     }
     body.append("id", Doc._id);
-    body.append("status", currentStatus);
 
-    console.log(`[frontend]`, selected);
-    if (currentStatus === "Rejected" && selected._id !== -1) {
-      alert("You cannot select next if you reject");
-    } else if (currentStatus === "Accepted" && selected._id !== -1) {
-      alert("You cannot select next if you accept");
+    if (selected._id === -1) {
+      body.append("next", Doc.current._id);
+      body.append("accepted", currentStatus);
     } else {
-      if (currentStatus !== "In progress") {
-        body.append("next", Doc.current._id);
-      } else {
-        body.append("next", selected._id);
-      }
-
-      for (let pair of body.entries()) {
-        console.log(`${pair[0]} -> ${pair[1]}`);
-      }
-
-      return await axios
-        .post("http://localhost:8080/api/document/approve", body, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        })
-        .then((res) => res.data)
-        .catch((err) => {
-          console.log(`[server]: ${err}`);
-        });
+      body.append("next", selected._id);
     }
+
+    return await axios
+      .post("http://localhost:8080/api/document/approve", body, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        console.log(`[server]: ${err}`);
+      });
   };
 
   const { data, error, refetch } = useQuery(
@@ -153,7 +56,11 @@ export default function page() {
 
   useEffect(() => {
     if (data && data?.message === "success") {
-      console.log(data);
+      if (data.message === "error") {
+        alert(data.errors);
+      } else {
+        route.back();
+      }
     } else if (data && data?.message === "Error") {
       console.log(`[frontend]: ${data.errors}`);
     }
@@ -183,23 +90,23 @@ export default function page() {
     }
   }, [Doc]);
 
+  useEffect(() => {
+    if (currentStatus !== "In progress") {
+      refetch().catch((err) => {
+        console.log(`[frontend]: ${err}`);
+      });
+    }
+  }, [currentStatus]);
+
   const acceptButtonClick = (e) => {
     e.preventDefault();
-    setActive(!Active);
     setCurrentStatus("Accepted");
-
-    refetch().catch((err) => {
-      console.log(`[frontend]: ${err}`);
-    });
+    setActive(!Active);
   };
   const rejectButtonClick = (e) => {
     e.preventDefault();
-    setActive(!Active);
     setCurrentStatus("Rejected");
-
-    refetch().catch((err) => {
-      console.log(`[frontend]: ${err}`);
-    });
+    setActive(!Active);
   };
 
   const onFileChange = (event) => {
@@ -225,11 +132,11 @@ export default function page() {
                 {Doc ? Doc.title : ""}
               </h1>
               <div className="text-xl pt-3">
-                {currentStatus === "accepted" ? (
+                {currentStatus === "Accepted" ? (
                   <p className="mt-1 leading-5 text-green-500 font-bold">
                     Accepted
                   </p>
-                ) : currentStatus === "rejected" ? (
+                ) : currentStatus === "Rejected" ? (
                   <p className="mt-1 leading-5 text-red-500 font-bold">
                     Rejected
                   </p>

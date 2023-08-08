@@ -135,12 +135,12 @@ module.exports = {
       if (nextId === "" && status === "In progress") {
         res.json({
           message: "error",
-          data: { next: "This field cannot be empty" },
+          errors: "Next field cannot be empty"
         });
       } else if (id === "") {
         res.json({
           message: "error",
-          data: { id: "This field cannot be empty" },
+          errors: "ID field cannot be empty"
         });
       } else if (
         req.position !== "DHoD" &&
