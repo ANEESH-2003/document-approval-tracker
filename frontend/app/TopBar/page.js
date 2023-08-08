@@ -49,7 +49,7 @@ function classNames(...classes) {
 export default function TopBar(props) {
   const position=useStore((state) => state.position);
   var navigation=[];
-  user.name=position; 
+  user.name=useStore((state)=>state.name);   
   if(position=="")
       navigation=NoneNavigation;
   else if(position=="Admin")
