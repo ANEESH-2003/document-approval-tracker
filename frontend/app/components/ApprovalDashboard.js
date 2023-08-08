@@ -98,7 +98,7 @@ export default function ApprovalDashboard() {
                       <Link
                         key={item.idx}
                         href={{
-                          pathname: "/document",
+                          pathname: "/UserDocument",
                           query: { idx: item.idx },
                         }}
                       >
@@ -119,7 +119,7 @@ export default function ApprovalDashboard() {
                       <Link
                         key={item.idx}
                         href={{
-                          pathname: "/document",
+                          pathname: "/UserDocument",
                           query: { idx: item.idx },
                         }}
                       >
