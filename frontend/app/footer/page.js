@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-        <div className="flex flex-col bg-gray-800">
+        <div className="absolute bottom:0 w-[100%] flex flex-col bg-gray-800">
         <h1 className="text-white pt-5 text-center">Made By</h1>
         <div className="flex justify-center pt-2 pb-5">
           <Link href="https://github.com/ANEESH-2003" target="_blank">

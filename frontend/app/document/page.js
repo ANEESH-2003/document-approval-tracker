@@ -1,5 +1,4 @@
 "use client";
-import TopBar from "../TopBar/page";
 import UserCard from "../UserCard/page";
 import { useState, Fragment, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
@@ -7,100 +6,6 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStore } from "@/store";
-import axios from "axios";
-import { useQuery } from "react-query";
-
-const navigation = [
-  { name: "Dashboard", href: "/../dashboard" },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: true },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
-
-/* info given by server */
-const docInfo = {
-  id: 1,
-  title: "fail all the students",
-  status: "under-consideration",
-  assignedBy: "sandeep saini",
-  currentlyassigned: "some nigga",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  signedBy: [
-    {
-      name: "sandeep saini",
-      designation: "DOA",
-      versionurl:
-        "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      empId: 69,
-    },
-    {
-      name: "rahul banergee",
-      designation: "Director",
-      versionurl:
-        "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      empId: 80,
-    },
-    {
-      name: "laxmi mittal",
-      designation: "chor",
-      versionurl: "",
-      empId: 420,
-    },
-  ],
-  attachments: [
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc1doc1doc1doc1doc1",
-      id: 1,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc2",
-      id: 2,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc2",
-      id: 3,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc1doc1doc1doc1doc1",
-      id: 1,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc2",
-      id: 2,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc2",
-      id: 3,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc1doc1doc1doc1doc1",
-      id: 1,
-    },
-    {
-      url: "https://res.cloudinary.com/dvpz3gjsj/image/upload/v1688558461/qcc5gok8srkfmse9wbar.pdf",
-      name: "doc2",
-      id: 2,
-    },
-  ],
-  eligibleAssignees: [
-    { id: 0, designation: "", name: "None" },
-    { id: 1, designation: "mechanical-teacher", name: "Wade Cooper" },
-    { id: 2, designation: "computer-teacher", name: "Arlene Mccoy" },
-    { id: 3, designation: "electrical-teacher", name: "Devon Webb" },
-    { id: 4, designation: "phd-teacher", name: "Tom Cook" },
-    { id: 5, designation: "president", name: "Tanya Fox" },
-    { id: 6, designation: "vivacity-head", name: "Hellen Schmidt" },
-  ],
-};
 /* "data": [
         {
             "_id": "64ad3325509e1948f7b6600e",
@@ -192,9 +97,9 @@ const docInfo = {
 export default function page() {
   const router = useSearchParams();
   const idx = router.get("idx");
-  const Doc = useStore((state) => (state.docs ? state.docs[idx] : {}));
-  const [currentStatus, setCurrentStatus] = useState(Doc ? Doc.status : "");
-  const [selected, setSelected] = useState(Doc ? Doc.eligible[0] : "");
+  const Doc = useStore((state) => state.docs[idx]);
+  const [currentStatus, setCurrentStatus] = useState(Doc.status || "");
+  const [selected, setSelected] = useState({ name: "None", position: "" });
   const [Active, setActive] = useState(true);
   const [state, setState] = useState({ selectedFile: null });
   const [active, setActive1] = useState(false);
@@ -306,8 +211,7 @@ export default function page() {
   const PastReviewers = Doc ? Doc.past : [];
 
   return (
-    <div className="min-h-full capitalize">
-      <TopBar page="Dashboard" navigation={navigation} />
+    <div className="min-h-screen capitalize">
       <main className="max-w-[95%] shadow-lg bg-slate-200 m-10 rounded-md">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex-row">
@@ -344,7 +248,7 @@ export default function page() {
           </h3>
           <div className="flex flex-wrap justify-between">
             <div className="sm:w-[40%] w-[100%]">
-              {PastReviewers === 0 ? null : (
+              {PastReviewers.length === 0 ? null : (
                 <div className="flex-row">
                   <h2 className="text-sm font-normal leading-6 text-gray-900 pt-3">
                     Till now this document has been signed by:
