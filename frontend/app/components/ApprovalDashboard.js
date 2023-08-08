@@ -7,10 +7,33 @@ import { useStore } from "@/store";
 import EmptyComponent from "../EmptyComponent/page";
 
 export default function ApprovalDashboard() {
+  const id = useStore((state) => state.id);
   const DocInfo = useStore((state) => state.docs);
   const acceptedDocs = DocInfo.filter((item) => item.status === "accepted");
   const rejectedDocs = DocInfo.filter((item) => item.status === "rejected");
-  const UCDocs = DocInfo.filter((item) => item.status === "In progress");
+  const UCDoc = DocInfo.filter((item) => item.status === "In progress");
+  const UCDocs = [];
+
+  for (let k of UCDoc) {
+    if (k.current._id !== id) {
+      let f = true;
+      for (let l of k.past) {
+        if (l._id === id) {
+          f = false;
+          acceptedDocs.push(k);
+          break;
+        }
+      }
+
+      if (f) {
+        UCDocs.push(k);
+      }
+    } else {
+      UCDocs.push(k);
+    }
+  }
+
+  // console.log(acceptedDocs);
 
   return (
     <>
@@ -67,7 +90,7 @@ export default function ApprovalDashboard() {
             </Tab.List>
             <Tab.Panels>
               <Tab.Panel>
-                {acceptedDocs.length == 0 ? (
+                {acceptedDocs.length === 0 ? (
                   <EmptyComponent />
                 ) : (
                   <ul className="flex-row mx-auto w-[100%] py-6 content-center">
