@@ -284,7 +284,7 @@ export default function page() {
             </div>
           </div>
           <div className="flex justify-between w-[100%] pt-2">
-            {currentStatus === "rejected" ? (
+            {currentStatus === "Rejected" ? (
               <></>
             ) : (
               <button
