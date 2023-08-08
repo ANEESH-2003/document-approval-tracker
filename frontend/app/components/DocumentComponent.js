@@ -10,11 +10,11 @@ export default function DocumentComponent(props) {
     </div>
     <div className="sm:flex sm:flex-col sm:items-end">
       
-        {props.doc.status=="accepted" ? (
+        {props.doc.status === "Accepted" ? (
           <p className="mt-1 text-xs leading-5 text-green-500 font-bold">
             Accepted
           </p>
-        ) : (props.doc.status=="rejected" ?(
+        ) : (props.doc.status === "Rejected" ?(
             <p className="mt-1 text-xs leading-5 text-red-500 font-bold">
             Rejected
           </p>
