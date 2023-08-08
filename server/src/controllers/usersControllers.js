@@ -110,7 +110,7 @@ module.exports = {
                 position: userInfo.position,
                 department: userInfo.department,
               }, process.env.JWT_KEY, {expiresIn: '1h'});
-              res.json({message: 'success', data: {token, position: userInfo.position}});
+              res.json({message: 'success', data: {token, position: userInfo.position, name: userInfo.name, email: userInfo.email}});
             } else {
               res.json({message: 'error', errors: 'Incorrect Password'});
             }
