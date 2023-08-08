@@ -8,11 +8,12 @@ export const useStore = create(
       position: "",
       email: "",
       name: "",
+      id: "",
       docs: [],
-      setToken: (token, position, email, name) =>
-        set((state) => ({ ...state, token, position, email, name })),
+      setToken: (token, position, email, name, id) =>
+        set((state) => ({ ...state, token, position, email, name, id })),
       logout: () =>
-        set((state) => ({ ...state, token: "", position: "", email: "", name: "", docs: [] })),
+        set((state) => ({ ...state, token: "", position: "", email: "", name: "", id: "", docs: [] })),
       setDocs: (docs) => set((state) => ({ ...state, docs })),
       removeDocs: () => set((state) => ({ ...state, docs: [] })),
     }),

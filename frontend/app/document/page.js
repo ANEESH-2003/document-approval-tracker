@@ -6,6 +6,8 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStore } from "@/store";
+import {useQuery} from "react-query";
+import axios from "axios";
 /* "data": [
         {
             "_id": "64ad3325509e1948f7b6600e",
@@ -98,7 +100,7 @@ export default function page() {
   const router = useSearchParams();
   const idx = router.get("idx");
   const Doc = useStore((state) => state.docs[idx]);
-  const [currentStatus, setCurrentStatus] = useState(Doc.status || "");
+  const [currentStatus, setCurrentStatus] = useState(Doc?.status || "");
   const [selected, setSelected] = useState({ name: "None", position: "" });
   const [Active, setActive] = useState(true);
   const [state, setState] = useState({ selectedFile: null });
@@ -114,12 +116,15 @@ export default function page() {
     body.append("id", Doc._id);
     body.append("status", currentStatus);
 
+    console.log(`[frontend]`, selected);
     if (currentStatus === "Rejected" && selected._id !== -1) {
       alert("You cannot select next if you reject");
+    } else if (currentStatus === "Accepted" && selected._id !== -1) {
+      alert("You cannot select next if you accept");
     } else {
-      if (selected._id === -1) {
+      if (currentStatus !== "In progress") {
         body.append("next", Doc.current._id);
-      } else if (currentStatus === "Accepted") {
+      } else {
         body.append("next", selected._id);
       }
 
