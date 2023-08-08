@@ -294,11 +294,11 @@ export default function page() {
                 disabled={!Active}
               >
                 <h2 className="text-lg font-bold p-2 text-lime-700">
-                  {currentStatus === "accepted" ? "Accepted" : "Accept"}
+                  {currentStatus === "Accepted" ? "Accepted" : "Accept"}
                 </h2>
               </button>
             )}
-            {currentStatus === "accepted" ? (
+            {currentStatus === "Accepted" ? (
               <></>
             ) : (
               <button
@@ -308,7 +308,7 @@ export default function page() {
                 disabled={!Active}
               >
                 <h2 className="text-lg font-bold p-2 text-red-700">
-                  {currentStatus === "rejected" ? "Rejected" : "Reject"}
+                  {currentStatus === "Rejected" ? "Rejected" : "Reject"}
                 </h2>
               </button>
             )}
