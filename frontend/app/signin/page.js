@@ -51,7 +51,7 @@ export default function Home() {
 
   useEffect(() => {
     if (data?.message === "success") {
-      login(data.data.token, data.data.position);
+      login(data.data.token, data.data.position, data.data.name, data.data.email);
       router.replace("/dashboard");
     } else if (data?.message === "error" && data?.errors) {
       setWrongInfo((value) => !value);

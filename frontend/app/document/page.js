@@ -1,12 +1,14 @@
 "use client";
 import TopBar from "../TopBar/page";
 import UserCard from "../UserCard/page";
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import SvgComponent from "./svgComponent";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useStore } from "@/store";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 const navigation = [
   { name: "Dashboard", href: "/../dashboard" },
@@ -186,48 +188,123 @@ const docInfo = {
             ]
         }
     ] */
+
 export default function page() {
   const router = useSearchParams();
   const idx = router.get("idx");
-  const Doc = useStore((state) => state.docs[idx]);
-  const [currentStatus, setCurrentStatus] = useState(Doc.status);
-  const [selected, setSelected] = useState({ name: "None", position: "" });
+  const Doc = useStore((state) => (state.docs ? state.docs[idx] : {}));
+  const [currentStatus, setCurrentStatus] = useState(Doc ? Doc.status : "");
+  const [selected, setSelected] = useState(Doc ? Doc.eligible[0] : "");
   const [Active, setActive] = useState(true);
-
-  const acceptButtonClick = () => {
-    setActive(!Active);
-    setCurrentStatus("accepted");
-  };
-  const rejectButtonClick = () => {
-    setActive(!Active);
-    setCurrentStatus("rejected");
-  };
   const [state, setState] = useState({ selectedFile: null });
   const [active, setActive1] = useState(false);
+  const [body, setBody] = useState(new FormData());
+  const [Attachments, setAttachments] = useState([]);
+  const token = useStore((state) => state.token);
+
+  const submit = async (token, selected, currentStatus, state) => {
+    if (state.selectedFile) {
+      body.append("document", state.selectedFile, state.selectedFile.name);
+    }
+    body.append("id", Doc._id);
+    body.append("status", currentStatus);
+
+    if (currentStatus === "Rejected" && selected._id !== -1) {
+      alert("You cannot select next if you reject");
+    } else {
+      if (selected._id === -1) {
+        body.append("next", Doc.current._id);
+      } else if (currentStatus === "Accepted") {
+        body.append("next", selected._id);
+      }
+
+      for (let pair of body.entries()) {
+        console.log(`${pair[0]} -> ${pair[1]}`);
+      }
+
+      return await axios
+        .post("http://localhost:8080/api/document/approve", body, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+        .then((res) => res.data)
+        .catch((err) => {
+          console.log(`[server]: ${err}`);
+        });
+    }
+  };
+
+  const { data, error, refetch } = useQuery(
+    ["submit", token, selected, currentStatus, state],
+    () => submit(token, selected, currentStatus, state),
+    { enabled: false },
+  );
+
+  useEffect(() => {
+    if (data && data?.message === "success") {
+      console.log(data);
+    } else if (data && data?.message === "Error") {
+      console.log(`[frontend]: ${data.errors}`);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      console.log(`[frontend]: ${error}`);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (Doc) {
+      const temp = [];
+
+      for (let i = 0; i < Doc.url.length; i++) {
+        for (let j = 0; j < PastReviewers.length; j++) {
+          if (Doc.url[i]._id === PastReviewers[j]._id) {
+            PastReviewers[j].versionurl = Doc.url[i].doc;
+          }
+        }
+
+        if (Doc.url[i].doc !== undefined) Attachments.push(Doc.url[i]);
+      }
+
+      setAttachments(temp);
+    }
+  }, [Doc]);
+
+  const acceptButtonClick = (e) => {
+    e.preventDefault();
+    setActive(!Active);
+    setCurrentStatus("Accepted");
+
+    refetch().catch((err) => {
+      console.log(`[frontend]: ${err}`);
+    });
+  };
+  const rejectButtonClick = (e) => {
+    e.preventDefault();
+    setActive(!Active);
+    setCurrentStatus("Rejected");
+
+    refetch().catch((err) => {
+      console.log(`[frontend]: ${err}`);
+    });
+  };
+
   const onFileChange = (event) => {
     setState({ selectedFile: event.target.files[0] });
     setActive1((a) => !a);
   };
   const onFileUpload = () => {
-    const formData = new FormData();
-    formData.append("document", state.selectedFile, state.selectedFile.name);
-    formData.append();
-    console.log(state.selectedFile);
+    alert("Document uploaded successfully");
+    // console.log(state.selectedFile);
 
     // axios.post("api/uploadfile", formData);
   };
 
-  const PastReviewers = Doc.past;
+  const PastReviewers = Doc ? Doc.past : [];
 
-  const Attachments = [];
-  for (let i = 0; i < Doc.url.length; i++) {
-    for (let j = 0; j < PastReviewers.length; j++) {
-      if (Doc.url[i]._id === PastReviewers[j]._id) {
-        PastReviewers[j].versionurl = Doc.url[i].doc;
-      }
-    }
-    if (Doc.url[i].doc !== undefined) Attachments.push(Doc.url[i]);
-  }
   return (
     <div className="min-h-full capitalize">
       <TopBar page="Dashboard" navigation={navigation} />
@@ -236,7 +313,7 @@ export default function page() {
           <div className="flex-row">
             <div>
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">
-                {Doc.title}
+                {Doc ? Doc.title : ""}
               </h1>
               <div className="text-xl pt-3">
                 {currentStatus === "accepted" ? (
@@ -263,7 +340,7 @@ export default function page() {
             </ul>
           </div>
           <h3 className="text-sm font-semibold leading-6 text-gray-900 pt-3">
-            {Doc.description}
+            {Doc ? Doc.description : ""}
           </h3>
           <div className="flex flex-wrap justify-between">
             <div className="sm:w-[40%] w-[100%]">
@@ -277,7 +354,7 @@ export default function page() {
                       <UserCard
                         key={item._id}
                         user={item}
-                        active={item.versionurl != undefined}
+                        active={item.versionurl !== undefined}
                       />
                     ))}
                   </ul>
@@ -295,9 +372,7 @@ export default function page() {
                   <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <span className="block truncate">
                       {selected.name}{" "}
-                      {selected.position === "" ? null : (
-                        <>({selected.position})</>
-                      )}
+                      {!selected.position ? null : <>({selected.position})</>}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
@@ -313,7 +388,7 @@ export default function page() {
                     leaveTo="opacity-0"
                   >
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      {Doc.eligible.map((person) => (
+                      {(Doc ? Doc.eligible : []).map((person) => (
                         <Listbox.Option
                           key={person._id}
                           className={({ active }) =>

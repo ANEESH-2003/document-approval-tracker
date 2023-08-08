@@ -49,7 +49,7 @@ const result = (data, allU) => {
       past,
       current,
       owner,
-      eligible,
+      eligible: [ { name: 'None', _id: '-1', department: null }, ...eligible ],
     };
   });
 };
@@ -125,7 +125,11 @@ module.exports = {
   approve: async (req, res) => {
     const nextId = req.body.next || "";
     const id = req.body.id || "";
-    const status = req.body.accepted || "In progress";
+    let status = req.body.accepted || "In progress";
+
+    if (nextId !== req.userId) {
+      status = "In progress";
+    }
 
     try {
       if (nextId === "" && status === "In progress") {
@@ -149,8 +153,6 @@ module.exports = {
         });
       } else {
         let url = "";
-
-        console.log(`[server]: ${req.file}`);
 
         if (req.file) {
           const result = await cloudinary.uploader.upload(req.file.path);
@@ -205,7 +207,7 @@ module.exports = {
                       `[server]: Error uploading the document \n[server]: ${err}`,
                     );
                     res.json({
-                      message: "Error uploading the document ",
+                      message: "error ",
                       errors: err,
                     });
                   });
@@ -221,7 +223,7 @@ module.exports = {
                 `[server]: Error uploading the document \n[server]: ${err}`,
               );
               res.json({
-                message: "Error uploading the document ",
+                message: "error",
                 errors: err,
               });
             });
@@ -234,7 +236,7 @@ module.exports = {
       }
     } catch (e) {
       console.log(`[server]: Error uploading the document \n[server]: ${e}`);
-      res.json({ message: "Error uploading the document ", errors: e });
+      res.json({ message: "error", errors: e });
     }
 
     if (req.file) {
