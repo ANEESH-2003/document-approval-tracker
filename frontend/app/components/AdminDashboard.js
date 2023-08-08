@@ -31,8 +31,8 @@ export default function page() {
               type="text"
               name="firstname"
               id="firstname"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" First Name"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="First Name"
             />
           </div>
           <div className='mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0'>
@@ -41,8 +41,8 @@ export default function page() {
               type="text"
               name="lastname"
               id="lastname"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" Last Name"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Last Name"
             />
           </div>
         </div>
@@ -53,8 +53,8 @@ export default function page() {
               type="text"
               name="email"
               id="email"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" E-mail"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="E-mail"
             />
           </div>
           <div className='mx-auto sm:w-[35%] w-[80%] pt-10 sm:pt-0'>
@@ -63,8 +63,8 @@ export default function page() {
               type="text"
               name="Designation"
               id="Designation"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder=" Designation"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Designation"
             />
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function page() {
               type={visible1 ? "text" : "password"}
               name="password"
               id="password"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-1"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-1"
               required
             />
               <span className="text-2xl absolute top-0 right-1" onClick={()=>setVisible1(value=>!value)}>
@@ -97,7 +97,7 @@ export default function page() {
               type={visible2 ? "text" : "password"}
               name="confirmpassword"
               id="confirmpassword"
-              className="w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-1"
+              className="pl-2 w-full rounded-md border-0 py-1 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 pl-1"
               required
             />
             <span className="text-2xl absolute top-0 right-1" onClick={()=>setVisible2(value=>!value)}>
