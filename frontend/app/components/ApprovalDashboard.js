@@ -9,8 +9,8 @@ import EmptyComponent from "../EmptyComponent/page";
 export default function ApprovalDashboard() {
   const id = useStore((state) => state.id);
   const DocInfo = useStore((state) => state.docs);
-  const acceptedDocs = DocInfo.filter((item) => item.status === "accepted");
-  const rejectedDocs = DocInfo.filter((item) => item.status === "rejected");
+  const acceptedDocs = DocInfo.filter((item) => item.status === "Accepted");
+  const rejectedDocs = DocInfo.filter((item) => item.status === "Rejected");
   const UCDoc = DocInfo.filter((item) => item.status === "In progress");
   const UCDocs = [];
 
